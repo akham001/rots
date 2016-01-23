@@ -1,0 +1,239 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"redstone",
+				"redstone.setOutput"
+			],
+			[
+				"else",
+				"elseif"
+			],
+			[
+				"reds",
+				"redstone.getInput"
+			],
+			[
+				"down",
+				"turtle.down"
+			],
+			[
+				"turtle",
+				"turtle.down"
+			],
+			[
+				"up",
+				"turtle.up"
+			],
+			[
+				"pl",
+				"turtle.place"
+			],
+			[
+				"fu",
+				"turtle.getFuelLevel"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/Users/Jethro/Desktop/practice.html",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Jethro/Downloads/installer.php",
+		"/C/Users/Jethro/Desktop/WRF/newMain.java",
+		"/C/Users/Jethro/Desktop/WRF/blah.java",
+		"/C/Users/Jethro/Desktop/WRF/HelloWorldApp.java",
+		"/C/Users/Jethro/Desktop/blah.java",
+		"/C/Users/Jethro/Documents/NetBeansProjects/boxes/src/Game_Core.java",
+		"/C/Users/Jethro/workspace/boxes/src/Game_Core.java",
+		"/C/Users/Jethro/Downloads/Game_Core.class",
+		"//LAZYCUNT/Chaos/minecraftserver/modserver/server - Copy.properties",
+		"/C/Users/Jethro/Dropbox/game1/src/main.java",
+		"/C/Users/Jethro/Dropbox/game1/src/missile.java",
+		"/C/Users/Jethro/workspace/boxes/src/Easyswing.java",
+		"/C/Users/Jethro/workspace/boxes/src/mainbox.java",
+		"/C/Users/Jethro/workspace/boxes/src/network_flow.java",
+		"/C/Users/Jethro/workspace/pissflaps/src/poop.java",
+		"/C/Users/Jethro/workspace/serversock/src/basicchatter.java",
+		"/C/Users/Jethro/Dropbox/identresponder/src/IdentServer.java",
+		"/C/Users/Jethro/Dropbox/listento137/src/main1.java",
+		"/C/Users/Jethro/Dropbox/game1/src/stringtheory.cpp",
+		"/C/Users/Jethro/Dropbox/Arraysasvectors/src/listfunction.java",
+		"/C/Users/Jethro/Dropbox/learning vectors/src/Circles_fun.java",
+		"/C/Users/Jethro/Dropbox/ufo/meat.java",
+		"/C/Users/Jethro/Dropbox/swingin/src/thing.java",
+		"/C/Users/Jethro/Downloads/play-movie-click-run.exe",
+		"/C/Users/Jethro/Documents/Websites/wp.dev/wp-content/plugins/webbers.php",
+		"/C/Users/Jethro/Desktop/MultiMC/instances/1.6.4 Gamez/minecraft/config/ComputerCraft.cfg",
+		"/C/Users/Jethro/Documents/Websites/wp.dev/wp-content/plugins/Iloveabie.pde",
+		"/C/Users/Jethro/Documents/Websites/wp.dev/wp-content/plugins/hello.php"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/Jethro/Desktop/practice.html",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}

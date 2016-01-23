@@ -28,7 +28,7 @@ class TestSprite{
 		sprite.addState("UP", 16, 23, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
 
 		//activate a state to start with
-		sprite.activateState("LEFT");
+		sprite.activateState("default");
 
 
 

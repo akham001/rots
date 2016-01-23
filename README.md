@@ -1,2 +1,0 @@
-# rots
-software projects
