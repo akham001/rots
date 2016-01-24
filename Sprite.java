@@ -538,6 +538,7 @@ public class Sprite extends JPanel{
 
 		//implicit awt graphics methods
 		super.paint(g);
+
 		Graphics2D g2d = (Graphics2D) g;
 
 		//smooths graphics
@@ -545,6 +546,7 @@ public class Sprite extends JPanel{
 
 		//draws the next sprite in the loop
 		g2d.drawImage(nextFrame(), getPosX(), getPosY(), null);
+
 	}
 
 	//automatic functions

@@ -23,13 +23,13 @@ class TestSprite{
 		}
 
 		//adding states, this is just an example the sprite is going no where
-		sprite.addState("DOWN", 0, 12, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
-		sprite.addState("LEFT", 13, 24, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
-		sprite.addState("RIGHT", 25, 36, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
-		sprite.addState("UP", 37, 48, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
+		sprite.addState("DOWN", 0, 12, sprite.getHeight(), sprite.getWidth(), 5,2,2, 90);
+		sprite.addState("LEFT", 13, 24, sprite.getHeight(), sprite.getWidth(), 5,2,2, 180);
+		sprite.addState("RIGHT", 25, 36, sprite.getHeight(), sprite.getWidth(), 5,2,2, 0);
+		sprite.addState("UP", 37, 48, sprite.getHeight(), sprite.getWidth(), 5, 2, 2,270);
 
 		//activate a state to start with
-		sprite.activateState("LEFT");
+		sprite.activateState("DOWN");
 
 
 
@@ -43,7 +43,7 @@ class TestSprite{
 		//this simulates the game loop for now
 		while (true) {
 
-			//sprite.moveSprite();   <- remove comment to watch sprite wander off
+			sprite.moveSprite();  // <- remove comment to watch sprite wander off
 			sprite.repaint();
 			Thread.sleep(50);
 
