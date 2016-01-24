@@ -66,6 +66,7 @@
 
 */
 
+import java.util.BitSet;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Font;
@@ -97,7 +98,15 @@ import java.awt.event.MouseMotionListener;
 
 public class Sprite extends JPanel{
 
-	public int test = 0;
+	//this stores the last up down left or right arrow to be pressed as lUP, lDown, lRight, lLeft, or if the arrows are activley being pressed it stores UP DOWN LEFT or RIGHT
+	//starts with none as default
+	private String direction = "none";
+
+	//this stores the last key pressed default is dash
+	private char lastPressed = '-';
+
+	//this stores a typed keycode, it is returned with get typed, default is zero
+	private int typed = 0;
 
 	//this stores a contact sheet image, this will contain all frames of animation in one image
 	private BufferedImage contactSheet;
@@ -477,6 +486,24 @@ public class Sprite extends JPanel{
 		posY = _y;
 	}
 
+	//returns key code of last key that was typed
+	public int getTyped(){
+
+		return typed;
+	}
+
+	//returns last arrow key, if it is being pressed it will be UP, if it is not being pressed and the last key to be pressed was up it will return lUP or lRIGHT etc
+	public String getDirection(){
+
+		return direction;
+	}
+
+	//returns last key press in for of char pressed
+	public char getPressed(){
+
+		return lastPressed;
+	}
+
 
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -527,12 +554,6 @@ public class Sprite extends JPanel{
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 
-			test++;
-
-			if(test > 3){
-
-				test = 0;
-			}
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -571,19 +592,77 @@ public class Sprite extends JPanel{
 
 	}
 
-	public class keyListen extends KeyAdapter {
+	//got help from oracle documentation for this keypress block -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
+	public class keyListen extends KeyAdapter {			
 
 		public void keyPressed(KeyEvent e) {
 	
+			int id = e.getID();
+
+			if(id == KeyEvent.KEY_TYPED){
+
+				lastPressed = e.getKeyChar();
+
+			}else{
+
+				int keyCode = e.getKeyCode();
+	    		
+	    		switch( keyCode ) { 
+
+	        		case KeyEvent.VK_UP:
+
+	        			direction = "UP";
+	           		break;
+
+	        		case KeyEvent.VK_DOWN:
+	          
+	          			direction = "DOWN";
+	            	break;
+
+	        		case KeyEvent.VK_LEFT:
+	           
+	           			direction = "LEFT";
+	            	break;
+
+	        		case KeyEvent.VK_RIGHT :
+	            
+	            		direction = "RIGHT";
+	            	break;
+	     		}
+	     	}
 		}
 
 		public void keyReleased(KeyEvent e) {
 
+			int keyCode = e.getKeyCode();
+
+			switch( keyCode ) { 
+
+        		case KeyEvent.VK_UP:
+
+        			direction = "lUP";
+           		break;
+
+        		case KeyEvent.VK_DOWN:
+          
+          			direction = "lDOWN";
+            	break;
+
+        		case KeyEvent.VK_LEFT:
+           
+           			direction = "lLEFT";
+            	break;
+
+        		case KeyEvent.VK_RIGHT :
+            
+            		direction = "lRIGHT";
+            	break;
+     			}
 		}
 
 		public void keyTyped(KeyEvent e) {
 
+			typed = e.getKeyCode();
 		}
-
 	}
 }

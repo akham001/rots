@@ -14,7 +14,7 @@ class TestSprite{
 		//sprites are created in try catch blocks
 		try{
 
-			sprite = new Sprite("man", "data/walksequence.png", 5, 6);
+			sprite = new Sprite("USER_INPUT" ,"man", "data/states.png", 4, 12);
 
 			
 		}catch(Exception e){
@@ -23,41 +23,50 @@ class TestSprite{
 		}
 
 		//adding states, this is just an example the sprite is going no where
-		sprite.addState("LEFT", 0, 7, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
-		sprite.addState("DOWN", 8, 15, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
-		sprite.addState("UP", 16, 23, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
+		sprite.addState("DOWN", 0, 12, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
+		sprite.addState("LEFT", 13, 24, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
+		sprite.addState("RIGHT", 25, 36, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
+		sprite.addState("UP", 37, 48, sprite.getHeight(), sprite.getWidth(), 0,0,0,0);
 
 		//activate a state to start with
-		sprite.activateState("default");
+		sprite.activateState("LEFT");
 
 
 
-
+		//add sprite to frame
 		frame.add(sprite);
 		frame.setSize(300, 400);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		
-	
+		//this simulates the game loop for now
 		while (true) {
 
-			//sprite.moveSprite();   <- remove comment to watch sprite run off
+			//sprite.moveSprite();   <- remove comment to watch sprite wander off
 			sprite.repaint();
 			Thread.sleep(50);
 
-			if(sprite.test == 1 ){
+			switch(sprite.getDirection()){
 
-				sprite.activateState("LEFT");
-			}
-			if(sprite.test == 2 ){
+				case "LEFT":
+					sprite.activateState("LEFT");
+				break;
 
-				sprite.activateState("UP");
-			}
-			if(sprite.test == 3 ){
+				case "RIGHT":
+					sprite.activateState("RIGHT");
+				break;
 
-				sprite.activateState("DOWN");
+				case "UP":
+					sprite.activateState("UP");
+				break;
+
+				case "DOWN":
+					sprite.activateState("DOWN");
+				break;
 			}
+
+			
 		}
 	}
 
