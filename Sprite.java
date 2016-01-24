@@ -89,24 +89,9 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
 import java.awt.image.RGBImageFilter;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 
-public class Sprite extends JPanel{
-
-	//this stores the last up down left or right arrow to be pressed as lUP, lDown, lRight, lLeft, or if the arrows are activley being pressed it stores UP DOWN LEFT or RIGHT
-	//starts with none as default
-	private String direction = "none";
-
-	//this stores the last key pressed default is dash
-	private char lastPressed = '-';
-
-	//this stores a typed keycode, it is returned with get typed, default is zero
-	private int typed = 0;
+public class Sprite{
 
 	//this stores a contact sheet image, this will contain all frames of animation in one image
 	private BufferedImage contactSheet;
@@ -187,13 +172,7 @@ public class Sprite extends JPanel{
 			//activate the default state
 			activateState("default");
 
-			if(_functionality == "USER_INPUT"){
-
-				this.addMouseListener(new mouselisten());
-				this.addMouseMotionListener(new mouseMotion());
-				this.addKeyListener(new keyListen());
-				this.setFocusable(true);
-			}
+			
 
 		}catch(Exception e){
 
@@ -486,26 +465,6 @@ public class Sprite extends JPanel{
 		posY = _y;
 	}
 
-	//returns key code of last key that was typed
-	public int getTyped(){
-
-		return typed;
-	}
-
-	//returns last arrow key, if it is being pressed it will be UP, if it is not being pressed and the last key to be pressed was up it will return lUP or lRIGHT etc
-	public String getDirection(){
-
-		return direction;
-	}
-
-	//returns last key press in for of char pressed
-	public char getPressed(){
-
-		return lastPressed;
-	}
-
-
-
 	//////////////////////////////////////////////////////////////////////////////
 	//	Extra classes and auto functions; stateData structure,paint     		//
 	//////////////////////////////////////////////////////////////////////////////
@@ -530,141 +489,6 @@ public class Sprite extends JPanel{
 			dvelocity = _dvel;
 			dacceleration = _dacc;
 			dangle = _dangle;
-		}
-	}
-
-	//automatic paint method draws next frame each time repaint is called on the object
-	public void paint(Graphics g){
-
-		//implicit awt graphics methods
-		super.paint(g);
-
-		Graphics2D g2d = (Graphics2D) g;
-
-		//smooths graphics
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		//draws the next sprite in the loop
-		g2d.drawImage(nextFrame(), getPosX(), getPosY(), null);
-
-	}
-
-	//automatic functions
-
-	class mouselisten implements MouseListener {
-
-		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void mousePressed(MouseEvent e) {
-
-
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	class mouseMotion implements MouseMotionListener {
-
-		public void mouseDragged(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void mouseMoved(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	//got help from oracle documentation for this keypress block -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
-	public class keyListen extends KeyAdapter {			
-
-		public void keyPressed(KeyEvent e) {
-	
-			int id = e.getID();
-
-			if(id == KeyEvent.KEY_TYPED){
-
-				lastPressed = e.getKeyChar();
-
-			}else{
-
-				int keyCode = e.getKeyCode();
-	    		
-	    		switch( keyCode ) { 
-
-	        		case KeyEvent.VK_UP:
-
-	        			direction = "UP";
-	           		break;
-
-	        		case KeyEvent.VK_DOWN:
-	          
-	          			direction = "DOWN";
-	            	break;
-
-	        		case KeyEvent.VK_LEFT:
-	           
-	           			direction = "LEFT";
-	            	break;
-
-	        		case KeyEvent.VK_RIGHT :
-	            
-	            		direction = "RIGHT";
-	            	break;
-	     		}
-	     	}
-		}
-
-		public void keyReleased(KeyEvent e) {
-
-			int keyCode = e.getKeyCode();
-
-			switch( keyCode ) { 
-
-        		case KeyEvent.VK_UP:
-
-        			direction = "lUP";
-           		break;
-
-        		case KeyEvent.VK_DOWN:
-          
-          			direction = "lDOWN";
-            	break;
-
-        		case KeyEvent.VK_LEFT:
-           
-           			direction = "lLEFT";
-            	break;
-
-        		case KeyEvent.VK_RIGHT :
-            
-            		direction = "lRIGHT";
-            	break;
-     			}
-		}
-
-		public void keyTyped(KeyEvent e) {
-
-			typed = e.getKeyCode();
 		}
 	}
 }
