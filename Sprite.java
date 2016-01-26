@@ -253,6 +253,15 @@ public class Sprite{
 		}
 	}
 
+	//as above function however if the state is allready active then the function is not called at all
+	public void continue_activateState(String _setStateTo){
+
+		if(getState() != _setStateTo){
+
+			activateState(_setStateTo);
+		}
+	}
+
 	//this function also activates state almost the same as above however it does not change
 	//velocity, maxVelocity, angle or speed, this is to keep fluid movements
 	public void semi_activateState(String _setStateTo){
@@ -260,34 +269,20 @@ public class Sprite{
 		//if found is never set to true, state was never found and default state is used
 		boolean found = false;
 
-		//loops for each state in states array
-		for(stateData sd: states){
+		//set temp variables
+		float _maxVelocity = getmaxVelocity();
+		float _velocity = getVelocity();
+		float _acceleration = getAcceleration();
+		float _angle = getAngle();
 
-			//if state with same name in args is found then 
-			if(sd.dName == _setStateTo){
+		//call activate state as normal
+		activateState(_setStateTo);
 
-				//change frames and size of sprite
-				frameStart = sd.dStart;
-				frameEnd = sd.dEnd;
-				width = sd.dWidth;
-				height = sd.dHeight;		
-
-				//set to animate frames from new states animation loop
-				frameNum = frameStart + 1;
-
-				found = true;
-				break;
-			}
-		}
-
-		//if not found then set to default state
-		if(!found){
-
-			frameStart = 0;
-			frameEnd = states.get(0).dEnd;
-			width = states.get(0).dWidth;
-			height = states.get(0).dHeight;
-		}
+		//set member variables with tems as they were
+		setmaxVelocity(_maxVelocity);
+		setVelocity(_velocity);
+		setAcceleration(_acceleration);
+		setAngle(_angle);
 	}
 
 	//this function returns the next frame in the animation loop
@@ -304,6 +299,27 @@ public class Sprite{
     		//reset frame to first frame in loop and return it
         	frameNum = frameStart;
         	return frames.get(frameNum);
+    	}
+	}
+
+	//gets present frame
+	public BufferedImage getFrame(){
+
+		return frames.get(frameNum);
+	}
+
+	//iterates next frame in loop but does not return it
+	public void nextFrame_noReturn(){
+
+		//if the frame is not at the end of the loop 
+		if(frameNum > 0){
+
+			//iterate present frame by one 
+        	frameNum++;
+    	}else{
+
+    		//reset frame to first frame in loop 
+        	frameNum = frameStart;
     	}
 	}
 
@@ -413,6 +429,12 @@ public class Sprite{
 	public float getmaxVelocity(){
 
 		return maxVelocity;
+	}
+
+	//returns maxVelocity
+	public float getVelocity(){
+
+		return velocity;
 	}
 
 	//returns acceleration

@@ -25,8 +25,7 @@ import java.awt.event.KeyListener;
 
 public class Game extends Canvas implements Runnable{
 	
-	//static global sprite object
-	private Sprite sprite = null;
+
 
 	//screen size variables initialised in constructor
 	private int WIDTH, HEIGHT;
@@ -45,48 +44,33 @@ public class Game extends Canvas implements Runnable{
 	//this stores a typed keycode, it is returned with get typed, default is zero
 	private int typed = 0;
 
+	//static global Player object initialised in constructor
+	public Player p1;
 
-	///////////////////////////////////////////////////////////////////////
-	//	 			GAME SETUP FUNCTIONS IN GAME CONSTRUCTOR	        ///
-    ///////////////////////////////////////////////////////////////////////
+	//constructor for game class
 	public Game( int _W, int _H){
 
+		//adding key and mouse listener class to this window
 		this.addMouseListener(new mouselisten());
 		this.addMouseMotionListener(new mouseMotion());
 		this.addKeyListener(new keyListen());
 		this.setFocusable(true);
 
-		 Dimension size = new Dimension( WIDTH = _W, HEIGHT = _H);
-		 setPreferredSize(size);
-		
-		//////////////////////////////////////////////////////////////////
-		//		SETTING UP SPRITES FOR EXAMPLE PROGRAM HERE				//
-		//////////////////////////////////////////////////////////////////
+		//allows the buffer and window to be sized to args
+		Dimension size = new Dimension( WIDTH = _W, HEIGHT = _H);
+		setPreferredSize(size);
 
-		//sprites are created in try catch blocks
 		try{
 
-				//create sprite
-				sprite = new Sprite("USER_INPUT" ,"man", "data/states.png", 4, 12);
+			p1 = new Player();
+		}catch(Exception e){
 
-				//adding states, this is just an example the sprite is going no where
-				sprite.addState("DOWN", 0, 12, sprite.getHeight(), sprite.getWidth(), 5,2, 1, 90);
-				sprite.addState("LEFT", 13, 24, sprite.getHeight(), sprite.getWidth(), 5,2, 1, 180);
-				sprite.addState("RIGHT", 25, 36, sprite.getHeight(), sprite.getWidth(), 5,2, 1, 0);
-				sprite.addState("UP", 37, 48, sprite.getHeight(), sprite.getWidth(), 5, 2, 1,270);
-
-				//activate a state to start with
-				sprite.activateState("DOWN");
-
-				
-			}catch(Exception e){
-
-				System.out.println("Error in game constructor: " + e.toString());
+			System.out.println("Player failed to initialise");
 		}
 	}
 
 
-	//this function draws each sprite
+	//this function draws each sprite to a buffer and then flips it
 	private void draw(){
 
 		//manages multiple drawing to buffer
@@ -98,7 +82,10 @@ public class Game extends Canvas implements Runnable{
 			//if buffer is not initialised ccreates new buffer to draw over
 			if(bs == null){
 
+				//two layers to buffer
 	    		createBufferStrategy(2);
+
+	    		//returns buffer to canvas for draw
 	    		return;
 	   		}
 
@@ -117,28 +104,26 @@ public class Game extends Canvas implements Runnable{
         	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
 
         	
+        	if(getDirection() == "LEFT" ||getDirection() == "RIGHT" || getDirection() == "UP" || getDirection() == "DOWN"){
 
-        	if(getDirection() == "UP" || getDirection() == "DOWN" || getDirection() == "LEFT" || getDirection() == "RIGHT" ){
-
-        	//gets movement based on recent arrows pressed
-        	sprite.activateState(getDirection());
+        		p1.continue_activateState(getDirection());
+        		       		
         	}
 
-        	//update sprite movement
-        	sprite.moveSprite();
-
-        	//draws the sprite
-	 		graphics.drawImage(sprite.nextFrame(), sprite.getPosX(), sprite.getPosY(), null);
+        	p1.moveSprite();
+        	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+        	
+	 		
 	 		
 
 
 	 		////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\
 
 
-	 		//clears graphics object
+	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();	
 
-	 		//shows image on buffer
+	 		//shows image from buffer
 	 		bs.show();		
 	 			
 		}catch(Exception e){
@@ -146,7 +131,8 @@ public class Game extends Canvas implements Runnable{
 			System.out.println("Error in draw function of Game: " + e.toString());
 		}
 	 
-        //Synchronises drawring on the screen with for smoother graphics bliting
+        //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
+        //as though frames being drawn evenly in time but not without.
         Toolkit.getDefaultToolkit().sync();	
 	}
 
@@ -157,14 +143,16 @@ public class Game extends Canvas implements Runnable{
       
       while(true){
 
+      	//calls draw function
       	draw();
 
       	try{
                 
-            //temporary delay
+            //temporary delay, must be calculated in relation to CPU speed of users computer
         	Thread.sleep(50);
         }catch(Exception e){ 
 
+        	System.out.println("error in main game thread");
         }
       }
     }

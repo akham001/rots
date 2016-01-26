@@ -17,6 +17,7 @@ class TestSprite extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 
+		//calls runnable function
 		game.run();
 
 	}
@@ -24,6 +25,5 @@ class TestSprite extends JFrame{
 	public static void main(String[] args) throws InterruptedException {
 				
 		new TestSprite();
-
 	}
 }
