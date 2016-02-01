@@ -116,8 +116,8 @@ public class Sprite{
 
 	public boolean selected;
 
-	//this stores the present state of the object, its set to default
-	private String state = "default";
+	//this stores the present state of the object, its set to default. name identifies object
+	private String state = "default", name;
 
 	//default font is 'serif' 
 	private Font font = new Font("serif", Font.PLAIN, 30);
@@ -136,13 +136,17 @@ public class Sprite{
 
 		try{
 
+			//assign name
+			name = _name;
+
 			//temporary load image function
 			contactSheet = ImageIO.read(new File(_path));
 
 			//init frames array
 			initFrames(_rows, _cols);
 
-			//set default state of sprite
+			//set default state of sprite, if an uneven table this will need to be over written
+			//to create an alternative default state that will not draw the blank frames
 			addState( "default", 0, ( _rows * _cols) - 1, height, width, 0, 0, 0, 0);
 
 			//activate the default state
@@ -160,6 +164,9 @@ public class Sprite{
 
 		try{
 
+			//assign name
+			name = _name;
+
 			//temporary load image function
 			contactSheet = ImageIO.read(new File(_path));
 
@@ -170,9 +177,56 @@ public class Sprite{
 			addState( "default", 0, ( _rows * _cols) - 1, height, width, 0, 0, 0, 0);
 
 			//activate the default state
-			activateState("default");
+			activateState("default");		
 
-			
+		}catch(Exception e){
+
+			System.out.println("Initialisation of " +  _name + " failed: " + e.toString());
+		}
+
+	}
+
+	//this constructor is for a non animated sprite, just a rectangular image, this constructor 
+	//takes a buffered image as an arg
+	public Sprite(String _name, BufferedImage _img) throws Exception{
+
+		try{
+
+			//assign name
+			name = _name;
+
+			//initialises straight from args
+			contactSheet = _img;
+
+			//set default state of sprite
+			addState( "default", 0, 0, height, width, 0, 0, 0, 0);
+
+			//init frames array
+			initFrames( 1, 1);
+
+		}catch(Exception e){
+
+			System.out.println("Initialisation of " +  _name + " failed: " + e.toString());
+		}
+
+	}
+
+	//takes one image from path, no animation
+	public Sprite(String _name, String _path) throws Exception{
+
+		try{
+
+			//assign name
+			name = _name;
+
+			//temporary load image function
+			contactSheet = ImageIO.read(new File(_path));
+
+			//set default state of sprite
+			addState( "default", 0, 0, height, width, 0, 0, 0, 0);
+
+			//init frames array
+			initFrames( 1, 1);
 
 		}catch(Exception e){
 
@@ -203,8 +257,27 @@ public class Sprite{
 
 	//this function adds a state to the sprite, the first state is always the default state, other states are added by the user, if you want 
 	//a value to stay the same when you add it use the state in args for example in height use sprite.getHeight() in your code.
+	//this will also overwrite a state with the same name
 	public void addState( String _stateName, int _fStart, int _fEnd, int _height, int _width, float _mvel, float _vel, float _acc, float _ang){
+	
 
+		//loops through states search for statename allready
+		for(int x = 0; x < states.size() -1; x++){
+
+			//if state name allrady exists
+			if(states.get(x).dName == _stateName){
+
+				//delete that state and break out the loop
+				states.remove(x);
+
+				//message alerts to name and state that is over written
+				System.out.println(name + " state " + _stateName + " over written with new perameters!");
+
+				break;
+			}
+		}
+
+		//add state to 
 		states.add(new stateData( _stateName, _fStart, _fEnd, _height, _width, _mvel, _vel, _acc, _ang));
 	}
 
@@ -447,6 +520,18 @@ public class Sprite{
 	public void setAngle(float _angle){
 
 		angle = _angle;
+	}
+
+	//set width
+	public void setWidth(int _width){
+
+		width = _width;
+	}
+
+	//set height
+	public void setHeight(int _height){
+
+		height = _height;
 	}
 
 	//sets the present speed for the sprite
