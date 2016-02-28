@@ -99,8 +99,9 @@ public class Sprite{
 	public ArrayList<stateData> conditions = new ArrayList<stateData>();
 
 	//these store dimensions of the sprite, frame stores the present frameNum the sprite will draw, frameStart and frameEnd are the start and end loops the
-	//animation will cycle through, default state has start at 0 and end at the number of frames
-	private int posX, posY, width, height, frameNum, frameStart, frameEnd;
+	//animation will cycle through, default state has start at 0 and end at the number of frames, deltaX and Y are for 'deltaMove()' this function draws the sprite as normal but with added delta values
+	//this can be used for moving grids of sprites in relation to something 
+	private int posX, posY, width, height, frameNum, frameStart, frameEnd, deltaX, deltaY;
 
 	//maxVelocity, velocity, angle and acceleration are for smooth movement functions of the sprite, acceleration is to add a spot of easing to the movement functions
 	//to create a natural movement maxVelocity is the set speed velocity will build up or down to based on acceleration 
@@ -472,8 +473,8 @@ public class Sprite{
 	boolean checkCollision(Sprite _spr){
 
 		//this is a standard collision detetion algorithm using the sprites dimensions
-		if(getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
-       getPosY() + getHeight() > _spr.getPosY() && getPosY() <  _spr.getPosY() + _spr.getHeight()){
+		if((getPosX() + deltaX) + getWidth() > _spr.getPosX() && (getPosX() + deltaX) < _spr.getPosX() + _spr.getWidth() &&
+       (getPosY() + deltaY) + getHeight() > _spr.getPosY() && (getPosY() + deltaY) <  _spr.getPosY() + _spr.getHeight()){
 
 			colliding = false;
 			return true;
@@ -488,8 +489,8 @@ public class Sprite{
 	//the circle to collid with
 	boolean circularCollision(Sprite _spr, int _radius){
 
-		int squarex = getPosX() + (getWidth()/2) - _spr.getPosX() + (getWidth()/2);
-		int squarey = getPosY() + (getHeight()/2) - _spr.getPosY() + (getHeight()/2);
+		int squarex = deltaX + getPosX() + (getWidth()/2) - _spr.getPosX() + (getWidth()/2);
+		int squarey = deltaY + getPosY() + (getHeight()/2) - _spr.getPosY() + (getHeight()/2);
 
 		//this is a standard circular collision detetion algorithm using the sprites dimensions, the circular collision will collid with the center of
 		//this sprite from a circle eminating from the center of the sprite to check
@@ -507,12 +508,10 @@ public class Sprite{
 	//this function will set the angle to be pointing towards the sprite in args
 	public void pointTo( Sprite _sprite){
 
-		double angleTo = Math.toDegrees(Math.abs( Math.atan2( _sprite.getPosX() - getPosX(), _sprite.getPosY() - getPosY())));
+		double angleTo = Math.toDegrees(Math.abs( Math.atan2( getPosX() - _sprite.getPosX(), getPosY() - _sprite.getPosY())));
 
 		//inverse the angle as it is relative to
 		setAngle( angleTo);
-
-		System.out.println( angleTo);
 	}
 
 	//this function moves the sprite one unit towards its present vector each time it is called each time it is called
@@ -524,6 +523,13 @@ public class Sprite{
 		//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
 		//when first learning to use this
 		setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));
+	}
+
+	//moves the sprite with its presnt position plus a delta value
+	public void deltaMove(){
+
+		//adds delta value to existing value
+		setXY( posX + deltaX, posY + deltaY);
 	}
 
 	//manages acceleration easing if speed has not been set to constant
@@ -686,6 +692,12 @@ public class Sprite{
 		posY = _y;
 	}
 
+	public void setDelta( int _dx, int _dy){
+
+		deltaX = _dx;
+		deltaY = _dy;
+	}
+
 	/**********************************************************************************************************************\\
 						stateSata makes two sprite managment strategies possible, States and Conditions.
 
@@ -783,7 +795,7 @@ public class Sprite{
 
 					double _condition = getAngle();
 
-					if( _condition > angleStart && _condition < angleEnd){
+					if( (_condition > angleStart && _condition < angleEnd) ){
 
 						frameStart = dStart;
 						frameEnd = dEnd;
