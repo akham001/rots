@@ -17,6 +17,9 @@ import java.awt.event.KeyListener;
 	call it with the draw() member function, this method is called double buffering and it is needed to avoid 
 	constantly calling draw functions per-sprite.
 
+	The Class also accomodates mouse and keyboard input with innerclasses and functions
+	that return the last key pressed or being held down
+
 	I found this tutorial useful http://content.gpwiki.org/index.php/Java:Tutorials:Double_Buffering
 	and http://www.java-forums.org/new-java/51185-copied-code-tutorial-bufferstrategy.html
 	and this idiot https://www.youtube.com/watch?v=dwu4DAoac-I
@@ -24,8 +27,6 @@ import java.awt.event.KeyListener;
 */
 
 public class Game extends Canvas implements Runnable{
-	
-
 
 	//screen size variables initialised in constructor
 	private int WIDTH, HEIGHT;
@@ -112,9 +113,7 @@ public class Game extends Canvas implements Runnable{
 
         	p1.moveSprite();
         	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
-        	
-	 		
-	 		
+      	 		
 
 
 	 		////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\
