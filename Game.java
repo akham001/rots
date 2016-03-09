@@ -115,7 +115,7 @@ public class Game extends Canvas implements Runnable{
         	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
       	 		
 
-
+            System.out.println(direction);
 	 		////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\
 
 
