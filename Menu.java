@@ -29,11 +29,22 @@ public class Start extends Sprite{
             buttons.add(new Sprite("credit", "data/credit.png", 1, 2));
             buttons.add(new Sprtie("exit", "data/exit.png", 1, 2));
             buttons.add(new Sprite("pointer", "data/pointer.png", 1, 1));
+
+            initMenu();
             
         }catch(Exception e){
             
             System.out.println("Error in Player constructor: " + e.toString());
         }
+    }
+
+    //loops for each button initialising its y position and drawing at same x margin
+    private void initMenu(){
+
+    	for( int x = 0; x < buttons.size(); x++){
+
+    		buttons.get(x).setXY( 100, 60 * x);
+    	}
     }
     
     public void drawMenu( Graphics gr2){
@@ -50,9 +61,9 @@ public class Start extends Sprite{
         for( int x = 0; x < buttons.size(); x++){
             for( int y = 0; y < buttons.size(); y++){
                 
-                if( buttons.get(x).circularCollision( y, 10)){
+                if( buttons.get(x).collision( buttons.get(y)){
                 
-                    if( buttons(x).getName().equals("ponter") && buttons.get(y).getName().equals("start")){
+                    if( buttons(x).getName().equals("pointer") && buttons.get(y).getName().equals("start")){
                     
                         return 1;
                     }

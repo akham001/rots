@@ -4,16 +4,14 @@ import java.awt.image.BufferStrategy;
 
 class TestSprite extends JFrame{
 
-	Game game, menu;
+	Game game;
 
 	public TestSprite(){
 
 		
 		//this.setUndecorated(true);
 		game = new Game(800, 600);
-        menu = new Game(800, 600);
-		//this.add(game);
-        this.add(menu);
+		this.add(game);
 		this.pack();
 		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

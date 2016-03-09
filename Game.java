@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.MouseInfo;
 import java.awt.event.KeyListener;
 
 /*
@@ -29,11 +30,17 @@ import java.awt.event.KeyListener;
 public class Game extends Canvas implements Runnable{
 
 	//screen size variables initialised in constructor
-	private int WIDTH, HEIGHT;
+	private int WIDTH, HEIGHT, mouseX, mouseY;
 
 	//thses two objects are the key lelements of the clipping blitting method
 	private BufferStrategy bs;
 	private Graphics graphics;
+
+	//a menu class object 
+	Menu options;
+
+	//flag to end menu options
+	boolean menu;
 
 	//this stores the last up down left or right arrow to be pressed as lUP, lDown, lRight, lLeft, or if the arrows are activley being pressed it stores UP DOWN LEFT or RIGHT
 	//starts with none as default
@@ -61,8 +68,13 @@ public class Game extends Canvas implements Runnable{
 		Dimension size = new Dimension( WIDTH = _W, HEIGHT = _H);
 		setPreferredSize(size);
 
+		//setting menu flag to default true, this starts draw in menu mode
+		menu = false;
+
 		try{
 
+			//new instances of sprite must be onstructed in try catch blocks as the y throw exceptions
+			options = new Menu();
 			p1 = new Player();
 		}catch(Exception e){
 
@@ -72,7 +84,7 @@ public class Game extends Canvas implements Runnable{
 
 
 	//this function draws each sprite to a buffer and then flips it
-	private void draw(){
+	private void drawGame(){
 
 		//manages multiple drawing to buffer
 	    bs = getBufferStrategy();
@@ -115,10 +127,62 @@ public class Game extends Canvas implements Runnable{
         	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
       	 		
 
-            System.out.println(direction);
+            //System.out.println(direction);
 	 		////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\
 
 
+	 		//clears graphics object once has been drawn to buffer to save memory leak
+	 		graphics.dispose();	
+
+	 		//shows image from buffer
+	 		bs.show();		
+	 			
+		}catch(Exception e){
+
+			System.out.println("Error in draw function of Game: " + e.toString());
+		}
+	 
+        //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
+        //as though frames being drawn evenly in time but not without.
+        Toolkit.getDefaultToolkit().sync();	
+	}
+
+	//this function draws each sprite to a buffer and then flips it
+	private void drawMenu(){
+
+		//manages multiple drawing to buffer
+	    bs = getBufferStrategy();
+ 
+ 		//try catch block 
+		try {
+
+			//if buffer is not initialised ccreates new buffer to draw over
+			if(bs == null){
+
+				//two layers to buffer
+	    		createBufferStrategy(2);
+
+	    		//returns buffer to canvas for draw
+	    		return;
+	   		}
+
+	   		//initialises graphics with drawable objects from this class
+	 		graphics = bs.getDrawGraphics();
+
+        	//////////////////////////////////////////////////////////////////////////
+        	//																		//
+        	//		MENU FUNCTIONS AND UPDATES HERE									//
+        	//																		//
+        	//////////////////////////////////////////////////////////////////////////
+
+
+        	//background
+	 		graphics.setColor(Color.white);
+        	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
+
+        	//sets last element of buttons array to be at same position as mouse pointer
+        	options.buttons.get(buttons.size()).set( mouseX, mouseY);
+       
 	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();	
 
@@ -142,8 +206,16 @@ public class Game extends Canvas implements Runnable{
       
       while(true){
 
-      	//calls draw function
-      	draw();
+      	if(menu){
+
+      		//calls draw function of menu
+	      	drawMenu();
+	    }else{
+
+
+	    	//calls draw function of game
+	      	drawGame();
+	    }
 
       	try{
                 
@@ -179,8 +251,11 @@ public class Game extends Canvas implements Runnable{
 	class mouselisten implements MouseListener {
 
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
+	
+			if(options.getButton() == 1){
 
+				menu = false;
+			}
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -215,6 +290,11 @@ public class Game extends Canvas implements Runnable{
 		public void mouseMoved(MouseEvent arg0) {
 			// TODO Auto-generated method stub
 
+			mouseX = arg0.getX();
+            
+            mouseY = arg0.getY();
+
+			System.out.println(mouseX + "  " + mouseY);
 		}
 
 	}
