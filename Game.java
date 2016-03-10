@@ -181,7 +181,9 @@ public class Game extends Canvas implements Runnable{
         	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
 
         	//sets last element of buttons array to be at same position as mouse pointer
-        	options.buttons.get(buttons.size()).set( mouseX, mouseY);
+        	options.buttons.get(options.buttons.size()).setXY( mouseX, mouseY);
+
+        	options.drawMenu( graphics);
        
 	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();	
