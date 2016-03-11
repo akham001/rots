@@ -74,7 +74,7 @@ public class Game extends Canvas implements Runnable{
 		try{
 
 			//new instances of sprite must be onstructed in try catch blocks as the y throw exceptions
-			options = new Menu();
+			options = new Menu("data");
 			p1 = new Player();
 		}catch(Exception e){
 

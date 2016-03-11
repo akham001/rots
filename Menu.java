@@ -9,26 +9,26 @@ public class Menu{
     public ArrayList<Sprite> buttons = new ArrayList<Sprite>();
     
     //create player sprite here, throws an exception as base class also does
-    public Menu() throws Exception{
+    public Menu(String _media_folder) throws Exception{
         
         //sprites are created in try catch blocks
         try{
             
             //first thing to happen base class must be initialised
-            buttons.add(new Sprite("start", "data/start.png", 1, 2));
-            buttons.add(new Sprite("load", "data/load.png", 1, 2));
-            buttons.add(new Sprite("instructions", "data/instructions.png", 1, 2));
-            buttons.add(new Sprite("options", "data/options.png", 1, 2));
-            buttons.add(new Sprite("highscore", "data/highscore.png", 1, 2));
-            buttons.add(new Sprite("credit", "data/credit.png", 1, 2));
-            buttons.add(new Sprite("exit", "data/exit.png", 1, 2));
-            buttons.add(new Sprite("pointer", "data/pointer.png", 1, 1));
+            buttons.add(new Sprite("start", _media_folder + "start.png", 1, 2));
+            buttons.add(new Sprite("load", _media_folder + "load.png", 1, 2));
+            buttons.add(new Sprite("instructions", _media_folder + "instructions.png", 1, 2));
+            buttons.add(new Sprite("options", _media_folder + "options.png", 1, 2));
+            buttons.add(new Sprite("highscore", _media_folder + "highscore.png", 1, 2));
+            buttons.add(new Sprite("credit", _media_folder + "credit.png", 1, 2));
+            buttons.add(new Sprite("exit", _media_folder + "exit.png", 1, 2));
+            buttons.add(new Sprite("pointer", _media_folder + "pointer.png", 1, 1));
 
             initMenu();
             
         }catch(Exception e){
             
-            System.out.println("Error in Player constructor: " + e.toString());
+            System.out.println("Error in Menu constructor: " + e.toString());
         }
     }
 
