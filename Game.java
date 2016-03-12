@@ -69,7 +69,7 @@ public class Game extends Canvas implements Runnable{
 		setPreferredSize(size);
 
 		//setting menu flag to default true, this starts draw in menu mode
-		menu = false;
+		menu = true;
 
 		try{
 
@@ -177,13 +177,15 @@ public class Game extends Canvas implements Runnable{
 
 
         	//background
-	 		graphics.setColor(Color.white);
+	 		graphics.setColor(Color.BLACK);
         	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
 
         	//sets last element of buttons array to be at same position as mouse pointer
-        	options.buttons.get(options.buttons.size()).setXY( mouseX, mouseY);
+        	options.buttons.get(options.buttons.size()-1).setXY( mouseX - options.buttons.get(options.buttons.size()-1).getWidth()/2, mouseY - options.buttons.get(options.buttons.size()-1).getHeight()/2);
 
         	options.drawMenu( graphics);
+
+        	options.highlightButtons();
        
 	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();	
@@ -193,7 +195,7 @@ public class Game extends Canvas implements Runnable{
 	 			
 		}catch(Exception e){
 
-			System.out.println("Error in draw function of Game: " + e.toString());
+			System.out.println("Error in draw function of Menu: " + e.toString());
 		}
 	 
         //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
@@ -296,7 +298,7 @@ public class Game extends Canvas implements Runnable{
             
             mouseY = arg0.getY();
 
-			System.out.println(mouseX + "  " + mouseY);
+			//System.out.println(mouseX + "  " + mouseY);
 		}
 
 	}
