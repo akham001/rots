@@ -23,16 +23,14 @@ public class Player extends Sprite{
 		//sprites are created in try catch blocks
 		try{
 
-				//adding states, this is just an example the sprite is going no where
-				addState("DOWN", 0, 12, getHeight(), getWidth(), 5,2, 1, 90);
+				setGravityMode( true);
+	
 				addState("LEFT", 13, 24, getHeight(), getWidth(), 5,2, 1, 180);
 				addState("RIGHT", 25, 36, getHeight(), getWidth(), 5,2, 1, 0);
-				addState("UP", 37, 48, getHeight(), getWidth(), 5, 2, 1,270);
-
+	
 				//activate a state to start with
-				activateState("DOWN");
-
-				
+				activateState("RIGHT");
+							
 			}catch(Exception e){
 
 				System.out.println("Error in Player constructor: " + e.toString());

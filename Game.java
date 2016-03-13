@@ -62,6 +62,9 @@ public class Game extends Canvas implements Runnable{
 	//static global Player object initialised in constructor
 	public Player p1;
 
+	//stores a single sprite to be used as a platform, level class is presently in temporary state
+	public Platform plat1, plat2;
+
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor
 	public Image background;
@@ -70,10 +73,10 @@ public class Game extends Canvas implements Runnable{
 	public Game( int _W, int _H){
 
 		//adding key and mouse listener class to this window
-		this.addMouseListener(new mouselisten());
-		this.addMouseMotionListener(new mouseMotion());
-		this.addKeyListener(new keyListen());
-		this.setFocusable(true);
+		this.addMouseListener( new mouselisten());
+		this.addMouseMotionListener( new mouseMotion());
+		this.addKeyListener( new keyListen());
+		this.setFocusable( true);
 
 		//allows the buffer and window to be sized to args
 		Dimension size = new Dimension( WIDTH = _W, HEIGHT = _H);
@@ -84,16 +87,26 @@ public class Game extends Canvas implements Runnable{
 
 		try{
 
-			//new instances of sprite must be onstructed in try catch blocks as the y throw exceptions
+			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
+
+			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
+			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
+			plat1 = new Platform( 0 , HEIGHT - 310);
+
+			plat2 = new Platform( 30 , HEIGHT - 650);
+
+			plat1.setWH( WIDTH - (WIDTH/20), 100);
+
+			plat2.setWH( WIDTH/3, 50);
 
 			//safley initialise background image here
 			background = ImageIO.read(new File("data/background.png"));
 
 		}catch(Exception e){
 
-			System.out.println("Player failed to initialise");
+			System.out.println("Game failed to initialise correctly.");
 		}
 	}
 
@@ -127,7 +140,7 @@ public class Game extends Canvas implements Runnable{
         	//////////////////////////////////////////////////////////////////////////
 
 
-        	//background
+        	//background image
 	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
         	
         	if( getDirection() == "LEFT" ||getDirection() == "RIGHT" || getDirection() == "UP" || getDirection() == "DOWN"){
@@ -142,11 +155,21 @@ public class Game extends Canvas implements Runnable{
         	}
 
         	p1.moveSprite();
+
+        	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+
         	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
-      	 		
+
+        	//must set colliding to true if player is colliding with any other sprite
+  			if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
+
+  				p1.setCollision( true);
+  			}
+        	
 
             //System.out.println(direction);
-	 		////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\
+	 		////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 	 		//clears graphics object once has been drawn to buffer to save memory leak

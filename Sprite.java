@@ -105,14 +105,15 @@ public class Sprite{
 
 	//maxVelocity, velocity, angle and acceleration are for smooth movement functions of the sprite, acceleration is to add a spot of easing to the movement functions
 	//to create a natural movement maxVelocity is the set speed velocity will build up or down to based on acceleration 
-	private float maxVelocity, velocity, acceleration;  
+	private float maxVelocity, velocity, acceleration, gravityAcceleration;  
 
 	//angle variable, must be a double for easy conversion to degrees
 	private double angle;
 
 	//these are to check if the sprite is colliding with another sprite/colliding has been set to true, if the mouse is over the spite and if the sprite
-	//has been selected (mouse over sprite and a mouse click has been detected selected is toggled to true and false)
-	private boolean colliding, mouseOver, constantSpeed;
+	//has been selected (mouse over sprite and a mouse click has been detected selected is toggled to true and false), gravity mode applies top down gravity
+	//vector each time moveSPrite is called if it is set to true
+	private boolean colliding, mouseOver, constantSpeed, gravityMode;
 
 	public boolean selected;
 
@@ -476,11 +477,11 @@ public class Sprite{
 		if((getPosX() + deltaX) + getWidth() > _spr.getPosX() && (getPosX() + deltaX) < _spr.getPosX() + _spr.getWidth() &&
        (getPosY() + deltaY) + getHeight() > _spr.getPosY() && (getPosY() + deltaY) <  _spr.getPosY() + _spr.getHeight()){
 
-			colliding = false;
+			colliding = true;
 			return true;
 		}else{
 
-			colliding = true;
+			colliding = false;
 			return false;
 		}
 	}
@@ -520,9 +521,29 @@ public class Sprite{
 		//set maxVelocity based on acceleration
 		accelerate();
 
-		//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
-		//when first learning to use this
-		setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));
+		//if gravity mode is not active
+		if( gravityMode){
+
+			//adds gravitational downward acceleration if spite is not colliding with anything
+			gravityAcceleration += 8;
+
+			if( colliding){
+
+				gravityAcceleration = 0;
+			}
+
+			//after setting the next position to x and y, adding the top downward gravity effect 
+			setXY( posX +=  gravityAcceleration * Math.cos( Math.toRadians(90)), posY +=  gravityAcceleration* Math.sin( Math.toRadians(90)));
+
+			//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
+			//when first learning to use this
+			setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));			
+		}else{
+
+			//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
+			//when first learning to use this
+			setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));
+		}
 	}
 
 	//moves the sprite with its presnt position plus a delta value
@@ -692,10 +713,21 @@ public class Sprite{
 		posY = _y;
 	}
 
+	//sets an offset for a sprite or a range of sprites
 	public void setDelta( int _dx, int _dy){
 
 		deltaX = _dx;
 		deltaY = _dy;
+	}
+
+	public boolean getGravityMode(){
+
+		return gravityMode;
+	}
+
+	public void setGravityMode( boolean _gm){
+
+		gravityMode = _gm;
 	}
 
 	/**********************************************************************************************************************\\
