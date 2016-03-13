@@ -11,6 +11,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.MouseInfo;
 import java.awt.event.KeyListener;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /*
 
@@ -46,6 +50,9 @@ public class Game extends Canvas implements Runnable{
 	//starts with none as default
 	private String direction = "none";
 
+	//some operations on the program are detected here, escape will set menu mode to true and pause the program
+	private String operation = "none";
+
 	//this stores the last key pressed default is dash
 	private char lastPressed = '-';
 
@@ -54,6 +61,10 @@ public class Game extends Canvas implements Runnable{
 
 	//static global Player object initialised in constructor
 	public Player p1;
+
+	//this will store the background, an image loading class will be used in the future, for now, the image
+	//is initialised in the constructor
+	public Image background;
 
 	//constructor for game class
 	public Game( int _W, int _H){
@@ -74,8 +85,12 @@ public class Game extends Canvas implements Runnable{
 		try{
 
 			//new instances of sprite must be onstructed in try catch blocks as the y throw exceptions
-			options = new Menu("data");
+			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
+
+			//safley initialise background image here
+			background = ImageIO.read(new File("data/background.png"));
+
 		}catch(Exception e){
 
 			System.out.println("Player failed to initialise");
@@ -113,14 +128,17 @@ public class Game extends Canvas implements Runnable{
 
 
         	//background
-	 		graphics.setColor(Color.white);
-        	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
-
+	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
         	
-        	if(getDirection() == "LEFT" ||getDirection() == "RIGHT" || getDirection() == "UP" || getDirection() == "DOWN"){
+        	if( getDirection() == "LEFT" ||getDirection() == "RIGHT" || getDirection() == "UP" || getDirection() == "DOWN"){
 
         		p1.continue_activateState(getDirection());
         		       		
+        	}
+
+        	if( operation == "ESCAPE"){
+
+        		menu = true;
         	}
 
         	p1.moveSprite();
@@ -180,13 +198,12 @@ public class Game extends Canvas implements Runnable{
 	 		graphics.setColor(Color.BLACK);
         	graphics.fillRect( 0, 0, WIDTH, HEIGHT);
 
-        	//sets last element of buttons array to be at same position as mouse pointer
+        	//sets last element of buttons array (an image of a mouse pointer) to be at same position as mouse x and y
         	options.buttons.get(options.buttons.size()-1).setXY( mouseX - options.buttons.get(options.buttons.size()-1).getWidth()/2, mouseY - options.buttons.get(options.buttons.size()-1).getHeight()/2);
 
+        	//draws the menu buttons
         	options.drawMenu( graphics);
 
-        	options.highlightButtons();
-       
 	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();	
 
@@ -214,6 +231,9 @@ public class Game extends Canvas implements Runnable{
 
       		//calls draw function of menu
 	      	drawMenu();
+
+	      	//resets operation to none, so that hitting escape can bring up menu again
+	      	operation = "NONE";
 	    }else{
 
 
@@ -259,6 +279,13 @@ public class Game extends Canvas implements Runnable{
 			if(options.getButton() == 1){
 
 				menu = false;
+			}else if(options.getButton() == 6){
+
+				System.out.println("Program deliberatley exited by user, chill is fine.");
+
+				//potentially unclean exit but exit all the same, if threads are present must kill threads
+				//network connection must also be considered, must kill those threads too
+				System.exit(0);
 			}
 		}
 
@@ -339,6 +366,11 @@ public class Game extends Canvas implements Runnable{
 	        		case KeyEvent.VK_RIGHT :
 	            
 	            		direction = "RIGHT";
+	            	break;
+
+	            	case KeyEvent.VK_ESCAPE :
+
+	            		operation = "ESCAPE";
 	            	break;
 	     		}
 	     	}

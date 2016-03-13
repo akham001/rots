@@ -23,9 +23,13 @@ class TestSprite extends JFrame{
 
 	public TestSprite(){
 
-		
-		//this.setUndecorated(true);
-		game = new Game(800, 600);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int)screenSize.getWidth();
+		int height = (int)screenSize.getHeight();
+
+		this.setUndecorated(true);
+		game = new Game( width, height);
+
 		this.add(game);
 
 		//custom cursor is blank, so own cursor can be used: http://stackoverflow.com/questions/1984071/how-to-hide-cursor-in-a-swing-application
@@ -34,8 +38,7 @@ class TestSprite extends JFrame{
             "null"));
 		this.pack();
 
-		this.setSize(800,600);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize( width, height);
 		this.setVisible(true);
 
 		//calls runnable function
