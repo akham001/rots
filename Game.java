@@ -97,7 +97,12 @@ public class Game extends Canvas implements Runnable{
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( 0, 30);
+
+			//starting position for player
 			p1.setXY( WIDTH - 300, HEIGHT - (315 + p1.getHeight()));
+
+			//starting angle for player
+			p1.setAngle(0);
 
 			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
 			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
@@ -151,23 +156,42 @@ public class Game extends Canvas implements Runnable{
         	//background image
 	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
         	
-        	if( getDirection() == "LEFT" ||getDirection() == "RIGHT"){
+        	if( getDirection() == "LEFT"){
 
-        		p1.moveSprite(); 		       		
+        		p1.setAngle(180);
+        		p1.setVelocity(5);
+        		graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+        	}else if( getDirection() == "RIGHT"){
+        			
+        		p1.setAngle(0);
+        		p1.setVelocity(5);
+        		graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+        	}else{
+
+        		graphics.drawImage( p1.getFrame(0), p1.getPosX(), p1.getPosY(), null);
+        		p1.setVelocity(0);
         	}
+
+        	p1.pollConditions("ANGLE");
+        	p1.moveSprite(); 
 
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
         	if( operation == "ESCAPE"){
 
         		menu = true;
+        	}else if( operation == "JUMP" && p1.getCollision()){
+
+        		p1.setThrustAcceleration( 80);
+
+        		//reset operation to none
+        		operation = "NONE";
         	}
 
         	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
-
-        	graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+        	
 
         	//must set colliding to true if player is colliding with any other sprite
   			if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
@@ -405,6 +429,11 @@ public class Game extends Canvas implements Runnable{
 	        		case KeyEvent.VK_RIGHT :
 	            
 	            		direction = "RIGHT";
+	            	break;
+
+	            	case KeyEvent.VK_SPACE :
+
+	            		operation = "JUMP";
 	            	break;
 
 	            	case KeyEvent.VK_ESCAPE :

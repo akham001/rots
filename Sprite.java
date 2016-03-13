@@ -108,7 +108,7 @@ public class Sprite{
 	private float maxVelocity, velocity, acceleration, gravityAcceleration;  
 
 	//angle variable, must be a double for easy conversion to degrees
-	private double angle;
+	private double angle, gravityAngle, thrustAngle, gravity, thrustAcceleration;
 
 	//these are to check if the sprite is colliding with another sprite/colliding has been set to true, if the mouse is over the spite and if the sprite
 	//has been selected (mouse over sprite and a mouse click has been detected selected is toggled to true and false), gravity mode applies top down gravity
@@ -524,16 +524,32 @@ public class Sprite{
 		//if gravity mode is not active
 		if( gravityMode){
 
-			//adds gravitational downward acceleration if spite is not colliding with anything
-			gravityAcceleration += 8;
+			//adds gravitational downward acceleration if sprite is not colliding with anything
+			gravityAcceleration += gravity;
 
 			if( colliding){
 
 				gravityAcceleration = 0;
 			}
 
-			//after setting the next position to x and y, adding the top downward gravity effect 
-			setXY( posX +=  gravityAcceleration * Math.cos( Math.toRadians(90)), posY +=  gravityAcceleration* Math.sin( Math.toRadians(90)));
+			if( thrustAcceleration > 0){
+
+				thrustAcceleration -= gravity;
+
+				//zeros thrust if it goes under zero
+				if(thrustAcceleration < 0){
+
+					thrustAcceleration = 0;
+				}
+			}
+
+			/// IF THIS WORKS CREATE VECTOR ADDING FUNCTION
+
+			//adding thrust forces to movement vector
+			setXY( posX +=  thrustAcceleration * Math.cos( Math.toRadians( thrustAngle)), posY +=  thrustAcceleration * Math.sin( Math.toRadians( thrustAngle)));
+
+			//adding gravity to movement vector
+			setXY( posX +=  gravityAcceleration * Math.cos( Math.toRadians( gravityAngle)), posY +=  gravityAcceleration* Math.sin( Math.toRadians( gravityAngle)));
 
 			//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
 			//when first learning to use this
@@ -546,7 +562,9 @@ public class Sprite{
 		}
 	}
 
-	//moves the sprite with its presnt position plus a delta value
+
+
+	//superficially moves the sprite with its present position plus a delta value
 	public void deltaMove(){
 
 		//adds delta value to existing value
@@ -730,6 +748,48 @@ public class Sprite{
 		gravityMode = _gm;
 	}
 
+	public void setGravity( double _gravity){
+
+		gravity = _gravity;
+	}
+
+	public void setGravityAngle( double _gA){
+
+		gravityAngle = _gA;
+	}
+
+	public double getGravity(){
+
+		return gravity;
+	}
+
+	public double getGravityAngle(){
+
+		return gravityAngle;
+	}
+
+	public void setThrustAngle( double _tA){
+
+		thrustAngle = _tA;
+	}
+
+	public double getThrustAngle(){
+
+		return thrustAngle;
+	}
+
+	public void setThrustAcceleration( double _tA){
+
+		thrustAcceleration = _tA;
+	}
+
+	public double getThrustAcceleration(){
+
+		return thrustAcceleration;
+	}
+
+	
+
 	/**********************************************************************************************************************\\
 						stateSata makes two sprite managment strategies possible, States and Conditions.
 
@@ -821,7 +881,7 @@ public class Sprite{
 		//takes a double as args to satisfy angle, speed and velocity can convert into integer
 		public void checkCondition(String _name){
 
-			switch(_name){
+			switch( _name){
 
 				case "ANGLE":
 
@@ -829,8 +889,14 @@ public class Sprite{
 
 					if( (_condition > angleStart && _condition < angleEnd) ){
 
-						frameStart = dStart;
-						frameEnd = dEnd;
+						//the best way to tell if the condition has changed to a new one is to check if the present frame
+						//number is within the range of the old one
+						if( !(dStart <= frameNum && frameNum <= dEnd)){
+
+							frameNum = dStart;
+							frameStart = dStart;
+							frameEnd = dEnd;
+						}
 					}
 					
 					break;
@@ -841,8 +907,12 @@ public class Sprite{
 
 					if( _condition > speedStart && _condition < speedEnd){
 
-						frameStart = dStart;
-						frameEnd = dEnd;
+						if( !(dStart <= frameNum && frameNum <= dEnd)){
+
+							frameNum = dStart;
+							frameStart = dStart;
+							frameEnd = dEnd;
+						}
 					}
 						break;
 
@@ -852,8 +922,12 @@ public class Sprite{
 
 					if( _condition > dvelocity){
 
-						frameStart = dStart;
-						frameEnd = dEnd;
+						if( !(dStart <= frameNum && frameNum <= dEnd)){
+
+							frameNum = dStart;
+							frameStart = dStart;
+							frameEnd = dEnd;
+						}
 					}
 						break;
 				case "DECREASING":
@@ -862,8 +936,12 @@ public class Sprite{
 
 					if( _condition < dvelocity){
 
-						frameStart = dStart;
-						frameEnd = dEnd;
+						if( !(dStart <= frameNum && frameNum <= dEnd)){
+							
+							frameNum = dStart;
+							frameStart = dStart;
+							frameEnd = dEnd;
+						}
 					}
 						break;
 

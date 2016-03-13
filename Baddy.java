@@ -13,7 +13,10 @@ public class Baddy extends Sprite{
 		//sprites are created in try catch blocks
 		try{
 
+				//initialise for gravity conditions
 				setGravityMode( true);
+				setGravityAngle( 90);
+				setGravity( 8);
 				
 				addState("RIGHT", 0, 0, getHeight(), getWidth(), 5, 2, 3, 3);
 	

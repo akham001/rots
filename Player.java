@@ -23,7 +23,17 @@ public class Player extends Sprite{
 		//sprites are created in try catch blocks
 		try{
 
+				//initialise for gravity conditions
 				setGravityMode( true);
+				setGravityAngle( 90);
+				setGravity( 8);
+
+				//when thrust is applied the direction will be directly up
+				setThrustAngle( 270);
+
+				//initialise for what animations to play while in which directions
+				addAngleCondition( -1, 10, 24, 33);
+				addAngleCondition( 170, 190, 12, 23);
 
 			}catch(Exception e){
 
