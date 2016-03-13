@@ -24,13 +24,7 @@ public class Player extends Sprite{
 		try{
 
 				setGravityMode( true);
-	
-				addState("LEFT", 13, 24, getHeight(), getWidth(), 5,2, 1, 180);
-				addState("RIGHT", 25, 36, getHeight(), getWidth(), 5,2, 1, 0);
-	
-				//activate a state to start with
-				activateState("RIGHT");
-							
+
 			}catch(Exception e){
 
 				System.out.println("Error in Player constructor: " + e.toString());

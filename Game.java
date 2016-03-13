@@ -65,6 +65,9 @@ public class Game extends Canvas implements Runnable{
 	//stores a single sprite to be used as a platform, level class is presently in temporary state
 	public Platform plat1, plat2;
 
+	//stores a single baddy, this is for demo
+	public Baddy crab;
+
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor
 	public Image background;
@@ -90,6 +93,11 @@ public class Game extends Canvas implements Runnable{
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
+			crab = new Baddy();
+
+			//so crab doesnt fall too hard on the first platform at this stage
+			crab.setXY( 0, 30);
+			p1.setXY( WIDTH - 300, HEIGHT - (315 + p1.getHeight()));
 
 			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
 			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
@@ -143,19 +151,19 @@ public class Game extends Canvas implements Runnable{
         	//background image
 	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
         	
-        	if( getDirection() == "LEFT" ||getDirection() == "RIGHT" || getDirection() == "UP" || getDirection() == "DOWN"){
+        	if( getDirection() == "LEFT" ||getDirection() == "RIGHT"){
 
-        		p1.continue_activateState(getDirection());
-        		       		
+        		p1.moveSprite(); 		       		
         	}
 
+        	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
+        	//in menu
         	if( operation == "ESCAPE"){
 
         		menu = true;
         	}
 
-        	p1.moveSprite();
-
+        	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
 
@@ -166,6 +174,14 @@ public class Game extends Canvas implements Runnable{
 
   				p1.setCollision( true);
   			}
+
+  			//must set colliding to true if baddy is colliding with any other sprite
+  			if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
+
+  				crab.setCollision( true);
+  			}
+
+  			crab.moveSprite(); 
         	
 
             //System.out.println(direction);
