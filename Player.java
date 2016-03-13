@@ -26,7 +26,7 @@ public class Player extends Sprite{
 				//initialise for gravity conditions
 				setGravityMode( true);
 				setGravityAngle( 90);
-				setGravity( 8);
+				setGravity( 5);
 
 				//when thrust is applied the direction will be directly up
 				setThrustAngle( 270);
@@ -34,6 +34,10 @@ public class Player extends Sprite{
 				//initialise for what animations to play while in which directions
 				addAngleCondition( -1, 10, 24, 33);
 				addAngleCondition( 170, 190, 12, 23);
+
+				//hes a bit slow
+				setVelocity( 4);
+				setmaxVelocity( 20);
 
 			}catch(Exception e){
 

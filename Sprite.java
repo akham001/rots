@@ -31,37 +31,26 @@
 	comments will aim to explain variables and functions as though the reader is learning how to use the code, and functions and variables will be written to best describe their purpose and allow as readable code
 	as possible, however a lot of Javas paint methods and graphics functionality/overides are best loosley referenced to. 
 
+	Gravity and Thrust functions have been added, if yo uchoose gravity mode a gravity angle and strength has to be set, default is zero, adding thrust acceleration will temporarily cancel gravity effects
+	and can be used for jumping or for lander style physics, setting gravity angle to be always at the center of another sprite using point to function will create a gravity well
+
 
 
 																							TO-DO:       
 
-	add display size of sprite, create seperate display size from collision size and functions to support changes, possibly even allow easing to show gradual change in size! maybe.
 
-	add a perpixel collision function
-
-	add list of sprite names to ignore collisions with or to simply repel away from
-
-	consider converting images with a set colour to be converted to alpha
 
 	consider having a function that allows a contact sheet to be appended onto the existing one, consider adding more functionality to it and have an add state and animation function
 
-	add key and mouse detection add switch to toggle wether or not to higlight outline of sprite if it is mouse selected
 
 	add subclasses that will use this sprite class to create a menu button array, text buttons, consider having an inventory style menu!
 
 	add particle fountains
 
-	add jump functions relative to speed and movement
-
-	add gravity effects functions also relative to movement, consider having sprite types ie flying, walking
-
-	add dragable functionality to sprite 
-
-	add sound functionality, call in state change, have sound loaded in state data
+	add sound functionality, call in state and condition change, have sound loaded in state data
 
 
 
-																Please add Ideas below to consider adding to the TO-DO list:
 
 */
 
@@ -113,7 +102,7 @@ public class Sprite{
 	//these are to check if the sprite is colliding with another sprite/colliding has been set to true, if the mouse is over the spite and if the sprite
 	//has been selected (mouse over sprite and a mouse click has been detected selected is toggled to true and false), gravity mode applies top down gravity
 	//vector each time moveSPrite is called if it is set to true
-	private boolean colliding, mouseOver, constantSpeed, gravityMode;
+	private boolean colliding, collideAbove, collideBelow, collideLeft, collideRight, mouseOver, constantSpeed, gravityMode;
 
 	public boolean selected;
 
@@ -458,24 +447,24 @@ public class Sprite{
 	}
 
 	//adds a new frame to frame array
-	public void addFrame(BufferedImage _img){
+	public void addFrame( BufferedImage _img){
 
 		frames.add(_img);
 	}
 
 	//replaces a frame, first arg is frame second arg is position in array if frame to replace
-	public void replaceFrame(BufferedImage _img, int _index){
+	public void replaceFrame( BufferedImage _img, int _index){
 
 		frames.set(_index, _img);
 	}
 
 	//this function detects a collision with the sprite that is passed in args, if there is a collision 
 	//colliding is set to true else false
-	boolean checkCollision(Sprite _spr){
+	boolean checkCollision( Sprite _spr){
 
-		//this is a standard collision detetion algorithm using the sprites dimensions
-		if((getPosX() + deltaX) + getWidth() > _spr.getPosX() && (getPosX() + deltaX) < _spr.getPosX() + _spr.getWidth() &&
-       (getPosY() + deltaY) + getHeight() > _spr.getPosY() && (getPosY() + deltaY) <  _spr.getPosY() + _spr.getHeight()){
+		//this is a standard collision dectetion algorithm using the sprites dimensions
+		if(getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
+       getPosY() + getHeight() > _spr.getPosY() && getPosY() <  _spr.getPosY() + _spr.getHeight()){
 
 			colliding = true;
 			return true;
@@ -485,6 +474,86 @@ public class Sprite{
 			return false;
 		}
 	}
+
+	//this function checks if the collision was just to he left of the sprite
+	boolean checkCollisionLeft( Sprite _spr){
+
+		//create a collision rectangle based on sprite in args if width 10 in pixels
+		int rectL = _spr.getPosX() + 11;
+		int rectR = _spr.getPosX() + 1;
+
+		//this is a standard collision dectetion algorithm using the sprites dimensions
+		if(getPosX() + getWidth() > rectL && getPosX() < rectR &&
+       	getPosY() + getHeight() > _spr.getPosY() && getPosY() < _spr.getPosY() + _spr.getHeight()){
+
+			collideLeft = true;
+			return true;
+		}else{
+
+			collideLeft= false;
+			return false;
+		}
+	}
+
+	//this function checks if the collision was just to he left of the sprite
+	boolean checkCollisionRight( Sprite _spr){
+
+		//create a collision rectangle based on sprite in args if width 10 in pixels
+		int rectL = _spr.getPosX() + _spr.getWidth() + 1;
+		int rectR = _spr.getPosX() + _spr.getWidth() + 11;
+
+		//this is a standard collision dectetion algorithm using the sprites dimensions
+		if(getPosX() + getWidth() > rectR && getPosX() < rectL &&
+       	getPosY() + getHeight() > _spr.getPosY() && getPosY() < _spr.getPosY() + _spr.getHeight()){
+
+			collideRight = true;
+			return true;
+		}else{
+
+			collideRight = false;
+			return false;
+		}
+	}
+
+	//this function checks if the collision was just to he left of the sprite
+	boolean checkCollisionAbove( Sprite _spr){
+
+		//create a collision rectangle based on sprite in args if width 10 in pixels
+		int rectD = _spr.getPosY() + _spr.getHeight() + 1;
+		int rectU = _spr.getPosX() + _spr.getHeight() + 11;
+
+		if( getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
+       	getPosY() + getHeight() > rectU && getPosY() < rectD){
+
+			collideAbove = true;
+			return true;
+		}else{
+
+			collideAbove = false;
+			return false;
+		}
+	}
+
+	//this function checks if the collision was just to he left of the sprite
+	boolean checkCollisionBelow( Sprite _spr){
+
+		//create a collision rectangle based on sprite in args if width 10 in pixels
+		int rectU = _spr.getPosY() + _spr.getHeight() + 10;
+		int rectD = _spr.getPosY() + _spr.getHeight() + 1;
+
+		if( getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
+       	getPosY() + getHeight() > rectU && getPosY() < rectD){
+
+			collideBelow = true;
+			return true;
+		}else{
+
+			collideBelow= false;
+			return false;
+		}
+	}
+
+
 
 	//this function detects a circular collision with the centre of the sprite that is passed in args, the second argument is the diameter of
 	//the circle to collid with

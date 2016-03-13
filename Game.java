@@ -180,9 +180,9 @@ public class Game extends Canvas implements Runnable{
         	if( operation == "ESCAPE"){
 
         		menu = true;
-        	}else if( operation == "JUMP" && p1.getCollision()){
+        	}else if( operation == "JUMP" && p1.getCollision() && !p1.checkCollisionBelow( plat2)){
 
-        		p1.setThrustAcceleration( 80);
+        		p1.setThrustAcceleration( 60);
 
         		//reset operation to none
         		operation = "NONE";
@@ -197,6 +197,26 @@ public class Game extends Canvas implements Runnable{
   			if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
 
   				p1.setCollision( true);
+  			}
+
+  			if(p1.checkCollisionLeft( plat2)){
+
+  				System.out.println(" DANGLEH LEFT");
+  			}
+
+  			if(p1.checkCollisionRight( plat2)){
+
+  				System.out.println(" DANGLEH RIGHT");
+  			}
+
+  			if(p1.checkCollisionAbove( plat2)){
+
+  				System.out.println(" DANGLEH UP");
+  			}
+
+  			if(p1.checkCollisionBelow( plat2)){
+
+  				System.out.println(" DANGLEH DAHN");
   			}
 
   			//must set colliding to true if baddy is colliding with any other sprite
