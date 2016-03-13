@@ -27,6 +27,9 @@ class TestSprite extends JFrame{
 		int width = (int)screenSize.getWidth();
 		int height = (int)screenSize.getHeight();
 
+		width = 800;
+		height = 600;
+
 		this.setUndecorated(true);
 		game = new Game( width, height);
 

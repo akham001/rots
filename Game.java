@@ -99,20 +99,20 @@ public class Game extends Canvas implements Runnable{
 			crab.setXY( 0, 30);
 
 			//starting position for player
-			p1.setXY( WIDTH - 300, HEIGHT - (315 + p1.getHeight()));
+			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/2 + p1.getHeight()));
 
 			//starting angle for player
 			p1.setAngle(0);
 
 			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
 			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
-			plat1 = new Platform( 0 , HEIGHT - 310);
+			plat1 = new Platform( 0 , HEIGHT - HEIGHT/20);
 
-			plat2 = new Platform( 30 , HEIGHT - 650);
+			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
 
-			plat1.setWH( WIDTH - (WIDTH/20), 100);
+			plat1.setWH( WIDTH - (WIDTH/20), HEIGHT/20);
 
-			plat2.setWH( WIDTH/3, 50);
+			plat2.setWH( WIDTH/3, HEIGHT/20);
 
 			//safley initialise background image here
 			background = ImageIO.read(new File("data/background.png"));
@@ -182,7 +182,7 @@ public class Game extends Canvas implements Runnable{
         		menu = true;
         	}else if( operation == "JUMP" && p1.getCollision() && !p1.checkCollisionBelow( plat2)){
 
-        		p1.setThrustAcceleration( 60);
+        		p1.setThrustAcceleration( 47);
 
         		//reset operation to none
         		operation = "NONE";

@@ -45,8 +45,8 @@ public class Menu{
             //they are a little big, half the size
             buttons.get(x).setWH( buttons.get(x).getWidth()/2, buttons.get(x).getHeight() / 2);
 
-             //sets the positions relativley to the screen, draws them a little apart also to avoid pointer clicking two at once
-             buttons.get(x).setXY( (WIDTH/2) - (buttons.get(x).getWidth()/2), 100 + (buttons.get(x).getHeight() + 20) * (1 + x) );
+             //sets the positions relativley to the screen, draws them a little apart also to avoid pointer clicking two at once, that distance is calculated relativley
+             buttons.get(x).setXY( (WIDTH/2) - (buttons.get(x).getWidth()/2), HEIGHT/100 + (buttons.get(x).getHeight() + HEIGHT/60 ) * (1 + x) );
 
     	}
     }

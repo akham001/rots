@@ -538,11 +538,11 @@ public class Sprite{
 	boolean checkCollisionBelow( Sprite _spr){
 
 		//create a collision rectangle based on sprite in args if width 10 in pixels
-		int rectU = _spr.getPosY() + _spr.getHeight() + 10;
-		int rectD = _spr.getPosY() + _spr.getHeight() + 1;
+		int rectU = _spr.getPosY() + _spr.getHeight() + 1;
+		int rectD = _spr.getPosY() + _spr.getHeight() + 11;
 
 		if( getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
-       	getPosY() + getHeight() > rectU && getPosY() < rectD){
+       	getPosY() < rectD && getPosY() > rectU){
 
 			collideBelow = true;
 			return true;
