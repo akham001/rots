@@ -103,7 +103,7 @@ public class Sprite{
 	//has been selected (mouse over sprite and a mouse click has been detected selected is toggled to true and false), gravity mode applies top down gravity
 	//vector each time moveSPrite is called if it is set to true
 	private boolean colliding, collideAbove, collideBelow, collideLeft, collideRight, mouseOver, constantSpeed, gravityMode;
-	private int boundsLeft, boundsRight, boundsTop, boundsBottom;
+	private boolean boundsLeft, boundsRight, boundsTop, boundsBottom;
 
 	public boolean selected;
 
@@ -556,9 +556,9 @@ public class Sprite{
 
 	//the following collisions detect if the player has left bounds that can be set in the constructor after the sprite
 	//object is created, this is meant for detecting if the sprite, is leaving left the bounds of the screen
-	public boolean leftBound(){
+	boolean leftLeftBound(){
 
-		if( getPosX() <= boundLeft){
+		if( getPosX() <  ){
 
 			return true;
 		}else{
@@ -567,38 +567,6 @@ public class Sprite{
 		}
 	}
 
-	public boolean rightBound(){
-
-                if( getPosX() >= boundRight){
-
-                        return true;
-                }else{
-
-                        return false;
-                }
-        }
-	
-	public boolean bottomBound(){
-
-                if( getPosY() >= boundBottom){
-
-                        return true;
-                }else{
-
-                        return false;
-                }
-        }
-
-	public boolean topBound(){
-
-                if( getPosY() <= boundTop){
-
-                        return true;
-                }else{
-
-                        return false;
-                }
-        }
 
 	//this function detects a circular collision with the centre of the sprite that is passed in args, the second argument is the diameter of
 	//the circle to collid with
@@ -709,15 +677,6 @@ public class Sprite{
 	//////////////////////////////
 	//	Getters and Setters		//
 	//////////////////////////////
-
-	//setting  sprites bounds collisions
-	public void setAllBounds(int _left, int _right, int _top, int _bottom){
-
-		boundsLeft = _left;
-		boundsRight = _right;
-		boundsTop = _top;
-		boundsBottom = _bottom;
-	}
 
 	//the object can just be set to collide for other collision situations
 	public void setCollision(boolean _collide){
