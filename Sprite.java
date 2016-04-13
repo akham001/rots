@@ -549,7 +549,7 @@ public class Sprite{
 			return true;
 		}else{
 
-			collideBelow= false;
+			collideBelow = false;
 			return false;
 		}
 	}
@@ -570,7 +570,6 @@ public class Sprite{
 	public boolean rightBound(){
 
                 if( getPosX() >= boundsRight){
-
                         return true;
                 }else{
 
@@ -580,7 +579,7 @@ public class Sprite{
 	
 	public boolean bottomBound(){
 
-                if( getPosY() >= boundsBottom){
+                if( getPosY() <= boundsBottom){
 
                         return true;
                 }else{
@@ -591,7 +590,7 @@ public class Sprite{
 
 	public boolean topBound(){
 
-                if( getPosY() <= boundsTop){
+                if( getPosY() >= boundsTop){
 
                         return true;
                 }else{

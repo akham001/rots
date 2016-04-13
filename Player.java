@@ -38,6 +38,9 @@ public class Player extends Sprite{
 				//hes a bit slow
 				setVelocity( 4);
 				setmaxVelocity( 20);
+            
+                //Set player Bounds
+                setAllBounds(-20,  734, 600, 0);
 
 			}catch(Exception e){
 
@@ -45,5 +48,34 @@ public class Player extends Sprite{
 		}
 	}
 
+    public void outOfBoundsCheck() {
+        System.out.println("x: " +getPosX() + " y: " + getPosY());
+        
+        if(rightBound()) {
+            setXY(734,getPosY());
+            //System.out.println("out of right");
+        }
+        if(leftBound()) {
+            setXY(-20, getPosY());
+        //    System.out.println("our of left");
+        }
+        if(bottomBound()) {
+            setXY(getPosX(), 0);
+          //  System.out.println("out of bottom");
+        }
+        if(topBound()) {
+            setThrustAcceleration(0);
+            //System.out.println("out of top");
+        }
+    }
+    
+    public void positionAdjust( Sprite _sprite) {
+        
+        if(checkCollision( _sprite)){
+            int temp = getPosY();
+            setXY(getPosX(), 417);
+            System.out.println("true");
+        }
+    }
 
 }

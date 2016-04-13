@@ -96,11 +96,11 @@ public class Game extends Canvas implements Runnable{
 			crab = new Baddy();
 
 			//so crab doesnt fall too hard on the first platform at this stage
-			crab.setXY( 0, 30);
+			crab.setXY( WIDTH/20, HEIGHT/20);
 
 			//starting position for player
 			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/2 + p1.getHeight()));
-
+            
 			//starting angle for player
 			p1.setAngle(0);
 
@@ -173,7 +173,9 @@ public class Game extends Canvas implements Runnable{
         	}
 
         	p1.pollConditions("ANGLE");
-        	p1.moveSprite(); 
+        	p1.moveSprite();
+            p1.outOfBoundsCheck();
+            p1.positionAdjust(plat1);
 
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
@@ -189,6 +191,7 @@ public class Game extends Canvas implements Runnable{
         	}
 
         	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
+          //  crab.outOfBoundsCheck();
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
         	
@@ -218,7 +221,8 @@ public class Game extends Canvas implements Runnable{
 
   				System.out.println(" DANGLEH DAHN");
   			}
-
+            
+            crab.outOfBoundsCheck();
   			//must set colliding to true if baddy is colliding with any other sprite
   			if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
 
@@ -226,7 +230,7 @@ public class Game extends Canvas implements Runnable{
   			}
 
   			crab.moveSprite(); 
-        	
+            
 
             //System.out.println(direction);
 	 		////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
