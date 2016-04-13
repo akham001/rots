@@ -558,7 +558,7 @@ public class Sprite{
 	//object is created, this is meant for detecting if the sprite, is leaving left the bounds of the screen
 	public boolean leftBound(){
 
-		if( getPosX() <= boundLeft){
+		if( getPosX() <= boundsLeft){
 
 			return true;
 		}else{
@@ -569,7 +569,7 @@ public class Sprite{
 
 	public boolean rightBound(){
 
-                if( getPosX() >= boundRight){
+                if( getPosX() >= boundsRight){
 
                         return true;
                 }else{
@@ -580,7 +580,7 @@ public class Sprite{
 	
 	public boolean bottomBound(){
 
-                if( getPosY() >= boundBottom){
+                if( getPosY() >= boundsBottom){
 
                         return true;
                 }else{
@@ -591,7 +591,7 @@ public class Sprite{
 
 	public boolean topBound(){
 
-                if( getPosY() <= boundTop){
+                if( getPosY() <= boundsTop){
 
                         return true;
                 }else{

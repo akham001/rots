@@ -110,7 +110,7 @@ public class Game extends Canvas implements Runnable{
 
 			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
 
-			plat1.setWH( WIDTH - (WIDTH/20), HEIGHT/20);
+			plat1.setWH( WIDTH , HEIGHT/20);
 
 			plat2.setWH( WIDTH/3, HEIGHT/20);
 
