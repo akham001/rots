@@ -1,6 +1,6 @@
 /*
 
-	Author: Jethro Holcroft. 
+	Author: Jethro Holcroft.
 	Start Date: 16/01/2016.
 
 	The purpose of this class is to draw animated sprites that are easy to use in a game type environment, these sprites should be able to function as projectiles, pickups
@@ -15,13 +15,15 @@
 	Comments will reference changes of state or conditions, a sub class called stateData manages these,
 	a state is the frames for an animation to loop between, the position to draw the next iteration, the width and height dimensions if they need to change,
 
-	in this case a state will these details and addState() will contain arguments that will add a new state to sprite 
+	in this case a state will these details and addState() will contain arguments that will add a new state to sprite
 	if no states are added, then only the default state will be used, the width and height of the object will be default and based on the size of the frames.
 	A condition is an angle speed or velocity with data on which frames to loop through in case the sprites condition matches one saved in the array list 'conditions',
-	'addAngle/speed/velocityCondition()' are three seperate functions that will add conditions, pollConditions() will do the checking to see if a condition has changed 
+	'addAngle/speed/velocityCondition()' are three seperate functions that will add conditions, pollConditions() will do the checking to see if a condition has changed
 
 	it is recomended that objects of this class will be stored in array lists or singularly in a wrapper class that is likley to be used in the main application loop using an MVC style functionality, however a lone
 	object right at the start of a program can be used as a splash screen, a timer class and a start stop boolean will be included to aid extra functionality.
+
+	Emitters are particle fountains, the instructions for setting up and using are near line 1000 and the comments more or less explain how they are used, further explantions also in documentation soon to be included
 
 	an additional button and menu class will also be incuded in the sprite class along with a special constructor, this is to take advantage of some of the functionality of the sprite class to add a little
 	gui support, therefore default font variables and font loading support will also be included.
@@ -29,29 +31,16 @@
 	There will be a lot of debug messages and error handling, this is to help make this class easy to use.
 
 	comments will aim to explain variables and functions as though the reader is learning how to use the code, and functions and variables will be written to best describe their purpose and allow as readable code
-	as possible, however a lot of Javas paint methods and graphics functionality/overides are best loosley referenced to. 
+	as possible, however a lot of Javas paint methods and graphics functionality/overides are best loosley referenced to.
 
 	Gravity and Thrust functions have been added, if yo uchoose gravity mode a gravity angle and strength has to be set, default is zero, adding thrust acceleration will temporarily cancel gravity effects
 	and can be used for jumping or for lander style physics, setting gravity angle to be always at the center of another sprite using point to function will create a gravity well
 
-
-
-																							TO-DO:       
-
-
-
-	consider having a function that allows a contact sheet to be appended onto the existing one, consider adding more functionality to it and have an add state and animation function
-
+																							TO-DO:
 
 	add subclasses that will use this sprite class to create a menu button array, text buttons, consider having an inventory style menu!
 
-	add particle fountains
-
 	add sound functionality, call in state and condition change, have sound loaded in state data
-
-
-
-
 */
 
 import java.util.BitSet;
@@ -68,7 +57,7 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
 import java.awt.image.RGBImageFilter;
-
+import java.util.Random;
 
 
 public class Sprite{
@@ -83,18 +72,22 @@ public class Sprite{
 	private ArrayList<stateData> states = new ArrayList<stateData>();
 
 	//stores conditions of the sprite, calling 'pollState()' on each object in this array list
-	//and inputing angle, speed or velocity of in args will return true or false if that condition has been stored, 
+	//and inputing angle, speed or velocity of in args will return true or false if that condition has been stored,
 	//and this sprites angle, speed or velocity matches
 	public ArrayList<stateData> conditions = new ArrayList<stateData>();
 
+	//this array will contain an array of different partical Emitters, particles or emiiters themselves can be accessed by their names with 'getPrticle()' or 'getEmitter()'
+	//it is very important that particles and emitters use a strict naming convention when created and used in order to keep track of what is going on
+	public ArrayList< Emitter> emitters = new ArrayList< Emitter>();
+
 	//these store dimensions of the sprite, frame stores the present frameNum the sprite will draw, frameStart and frameEnd are the start and end loops the
 	//animation will cycle through, default state has start at 0 and end at the number of frames, deltaX and Y are for 'deltaMove()' this function draws the sprite as normal but with added delta values
-	//this can be used for moving grids of sprites in relation to something 
+	//this can be used for moving grids of sprites in relation to something
 	private int posX, posY, width, height, frameNum, frameStart, frameEnd, deltaX, deltaY;
 
 	//maxVelocity, velocity, angle and acceleration are for smooth movement functions of the sprite, acceleration is to add a spot of easing to the movement functions
-	//to create a natural movement maxVelocity is the set speed velocity will build up or down to based on acceleration 
-	private float maxVelocity, velocity, acceleration, gravityAcceleration;  
+	//to create a natural movement maxVelocity is the set speed velocity will build up or down to based on acceleration
+	private float maxVelocity, velocity, acceleration, gravityAcceleration;
 
 	//angle variable, must be a double for easy conversion to degrees
 	private double angle, gravityAngle, thrustAngle, gravity, thrustAcceleration;
@@ -110,7 +103,7 @@ public class Sprite{
 	//this stores the present state of the object, its set to default. name identifies object
 	private String state = "default", name;
 
-	//default font is 'serif' 
+	//default font is 'serif'
 	private Font font = new Font("serif", Font.PLAIN, 30);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +161,7 @@ public class Sprite{
 			addState( "default", 0, ( _rows * _cols) - 1, height, width, 0, 0, 0, 0);
 
 			//activate the default state
-			activateState("default");		
+			activateState("default");
 
 		}catch(Exception e){
 
@@ -177,7 +170,7 @@ public class Sprite{
 
 	}
 
-	//this constructor is for a non animated sprite, just a rectangular image, this constructor 
+	//this constructor is for a non animated sprite, just a rectangular image, this constructor
 	//takes a buffered image as an arg
 	public Sprite(String _name, BufferedImage _img) throws Exception{
 
@@ -226,7 +219,7 @@ public class Sprite{
 
 	}
 
-	//this function initialises the array list frames with images cut from the contactSheet and will be called in the constructor, 
+	//this function initialises the array list frames with images cut from the contactSheet and will be called in the constructor,
 	//rows and cols along with the dimensions of contactSheet are used to work out the size of each frame to cut out, this only works if the
 	//contactSheet contains images divided evenly into rows and columns and also in the same relative position within it.
 	//the function returns a boolean if it was successful or not.
@@ -243,14 +236,14 @@ public class Sprite{
 				//this function uses the available variables to slice up the contact sheet in even parts
 				frames.add(contactSheet.getSubimage( c * width, r * height, width, height));
 			}
-		}		
+		}
 	}
 
-	//this function adds a state to the sprite, the first state is always the default state, other states are added by the user, if you want 
+	//this function adds a state to the sprite, the first state is always the default state, other states are added by the user, if you want
 	//a value to stay the same when you add it use the state in args for example in height use sprite.getHeight() in your code.
 	//this will also overwrite a state with the same name
 	public void addState( String _stateName, int _fStart, int _fEnd, int _height, int _width, float _mvel, float _vel, float _acc, double _ang){
-	
+
 
 		//loops through states search for statename allready
 		for(int x = 0; x < states.size() -1; x++){
@@ -268,7 +261,7 @@ public class Sprite{
 			}
 		}
 
-		//add state to 
+		//add state to
 		states.add(new stateData( _stateName, _fStart, _fEnd, _height, _width, _mvel, _vel, _acc, _ang));
 	}
 
@@ -282,7 +275,7 @@ public class Sprite{
 		//loops for each state in states array
 		for(stateData sd: states){
 
-			//if state with same name in args is found then 
+			//if state with same name in args is found then
 			if(sd.dName == _setStateTo){
 
 				//change frames and size of sprite
@@ -350,7 +343,7 @@ public class Sprite{
 		setAngle(_angle);
 	}
 
-	//adds angle condition to conditions array 
+	//adds angle condition to conditions array
 	public void addAngleCondition(double _startAngle, double _endAngle, int _frameStart, int _frameEnd){
 
 		conditions.add(new stateData(_startAngle, _endAngle, _frameStart, _frameEnd));
@@ -383,7 +376,7 @@ public class Sprite{
 	//this function returns the next frame in the animation loop
 	public BufferedImage nextFrame(){
 
-		//if the frame is not at the end of the loop 
+		//if the frame is not at the end of the loop
 		if(frameNum < frameEnd-1){
 
 			//iterate present frame by one and return it
@@ -418,14 +411,14 @@ public class Sprite{
 	//iterates next frame in loop but does not return it
 	public void nextFrame_noReturn(){
 
-		//if the frame is not at the end of the loop 
+		//if the frame is not at the end of the loop
 		if(frameNum > 0){
 
-			//iterate present frame by one 
+			//iterate present frame by one
         	frameNum++;
     	}else{
 
-    		//reset frame to first frame in loop 
+    		//reset frame to first frame in loop
         	frameNum = frameStart;
     	}
 	}
@@ -433,7 +426,7 @@ public class Sprite{
 	//this function returns the previous frame in the animation loop
 	public BufferedImage previousFrame(){
 
-		//if the frame is not at the end of the loop 
+		//if the frame is not at the end of the loop
 		if(frameNum > 0){
 
 			//iterate present frame by one and return it
@@ -459,7 +452,7 @@ public class Sprite{
 		frames.set(_index, _img);
 	}
 
-	//this function detects a collision with the sprite that is passed in args, if there is a collision 
+	//this function detects a collision with the sprite that is passed in args, if there is a collision
 	//colliding is set to true else false
 	boolean checkCollision( Sprite _spr){
 
@@ -576,7 +569,7 @@ public class Sprite{
                         return false;
                 }
         }
-	
+
 	public boolean bottomBound(){
 
                 if( getPosY() <= boundsBottom){
@@ -666,7 +659,7 @@ public class Sprite{
 
 			//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
 			//when first learning to use this
-			setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));			
+			setXY( posX += velocity * Math.cos(Math.toRadians(angle)), posY += velocity * Math.sin(Math.toRadians(angle)));
 		}else{
 
 			//increment positionX and Y using trig, I always found this link exceptionally usefull http://www.helixsoft.nl/articles/circle/sincos.htm
@@ -784,13 +777,13 @@ public class Sprite{
 		return name;
 	}
 
-	//sets name 
+	//sets name
 	public void setName(String _name){
 
 		name = _name;
 	}
 
-	//sets angle 
+	//sets angle
 	public void setAngle(double _angle){
 
 		angle = _angle;
@@ -844,7 +837,7 @@ public class Sprite{
 	public void toConstantSpeed(boolean _cspeed){
 
 		constantSpeed = _cspeed;
-	} 
+	}
 
 	//this re-sets the X and y positions
 	public void setXY( int _x, int _y ){
@@ -910,14 +903,347 @@ public class Sprite{
 		return thrustAcceleration;
 	}
 
-	
+	/*******************************************************************************************************************************
+						Emitters are a sub class that manage an array of sprites to create a particle fountain or projectile launch effect
+
+														Following functions will be related to following sub class 'Emitter'
+
+		AddEmitter( String, String, double, int, int, double, int, boolean, int, int) is a function in sprite that should be called when the sprite is created,
+		'fireEmitter("emitters name")'' or 'activateFountain(" emitters name")' will acivate preset behaviour that will be contained in the arguments of 'addEmitter()', 'drawEitter( "NAME OF EMITTER")'' will
+		draw each of that emitters particals and 'detectParticleCollision( "NAME_OF_EMITTER", Sprite _sprite)' will check the emitter with the name
+		in args one for collisions with each particle it owns against the sprite passed in args two.
+
+
+		particals are still destroyed after a certain amount of distance from the emitter is reached, this is because even though java does do garbage collection
+		java would still try and draw each and every particle unless it was removed at some point, it is also possible to give them a life time	with a get ticks object.
+
+	**********************************************************************************************************************************/
+
+	//adds a new emitter to the sprite
+	public void addEmitter( String _name, String _path, int _error, int _burst, int _burstrate, double _angle, int _vel, boolean _grav){
+
+		emitters.add( new Emitter(  _name, _path, _error, _burst, _burstrate, _angle, _vel, _grav));
+	}
+
+	//fires one particle from the emitter
+	public void fireEmitter( String _name){
+
+		for( int e = 0; e < emitters.size() -1; e++){
+
+			if( emitters.get( e).getEmitterName() == _name){
+
+				emitters.get( e).fire();
+			}
+		}
+	}
+
+	//draws particles in Emitter
+	public void drawEmitter( String _name){
+
+		for( int e = 0; e < emitters.size() -1; e++){
+
+			if( emitters.get( e).getEmitterName() == _name){
+
+				emitters.get( e).draw();
+			}
+		}
+	}
+
+	//activates a fountain or burst of particles
+	public void activateEmitterFountain( String _name){
+
+		for( int e = 0; e < emitters.size() -1; e++){
+
+			if( emitters.get( e).getEmitterName() == _name){
+
+				emitters.get( e).createFountain();
+			}
+		}
+	}
+
+	public boolean detectParticleCollision( String _name, Sprite _spr){
+
+		for( int e = 0; e < emitters.size() -1; e++){
+
+			if( emitters.get( e).checkParticleCollisions( _spr) && (emitters.get( e).getEmitterName() == _name)){
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+  //an object that is essentialy an arraylist manager for an array of dynamically created sprites, if this sprite class was a fountain
+	//then an Emitter will manage an array of sub sprites that create the water droblets ejecting from it
+	//its X and Y position is that of the sprite that owns it, although it can be adjusted with setOffset()
+	protected class Emitter{
+
+		Random rand;
+
+		//this array list will contain an array of sprites that Emitter will manage
+		ArrayList<Sprite> particles = new ArrayList<Sprite>();
+
+		//a timer class to manage particals being created at a set related
+		Ticks ticks;
+
+		String part_name;
+
+		//partical code ; will append the number to the end of the sub sprites name on creation
+		//explanation for following args above Emitter constructor, busrtNum is the particlal numebr the burst function is at
+		//this is to keep track of how many particals its made so it can stop at burst value
+		int particle_code, part_error, part_burstRate, particalvel, destruct_distance, offsetX, offsetY, part_burst, burstNum;
+		double part_angle, last_emition;
+		boolean grav_effected;
+
+		//the image of the particals
+		BufferedImage particle_image;
+
+		//theres going to be a lot of arguments for many things, line number with explanation coresponds to arg position in constructor
+		//most of which can be changed with Setters and Getters
+
+		//  1, name of the emitter, particals created will have the same name plus the number which they are given
+		//  2, path to the image in which to initialise the particals sprite data with
+		//  3, range of randomness to the angle assigned to each partical
+		//  4, number of particles to create for each time the 'fire()' function is called
+		//  5, gap in time before a new partical can be created
+		//  6, angle of direction for each partical when it is created
+		//  7, velocity of each partical
+		//  8, true if particle is effected by gravity, false if not
+		protected Emitter( String _name, String _image, int _error, int _burst, int _burstRate, double _angle, int _particalvel, boolean _grav){
+
+				//sets partical name for managment of particals and emiiters in the SPrite class
+				part_name = _name;
+
+				try{
+
+					//initialise a particle image for creation of sprites
+					particle_image = ImageIO.read( new File( _image));
+				}catch( Exception e){
+
+					System.out.println( "Error creating image for Emitter, check image exists in path: " + _image);
+				}
+
+				part_error = _error;
+				part_burst = _burst;
+				part_burstRate = _burstRate;
+
+				//this rate can be changed with a setter
+				ticks = new Ticks( part_burst);
+
+				part_angle = _angle;
+				particalvel = _particalvel;
+				grav_effected = _grav;
+
+				//this is the destance in which to remove the partical from the array to avoid too much over head default is 1500 in either x or y direction
+				//can be set to a different value
+				destruct_distance = 1500;
+
+				//create the random number generator
+				rand = new Random();
+		}
+
+		//creates x amount of new particles
+		public void createFountain(){
+
+			if( burstNum != getEmitter_burst()){
+
+				fire();
+				burstNum++;
+			}
+		}
+
+		//adds one particle to particle array
+		public void fire(){
+
+			//destroy particles on creation of new ones to save overhead
+			garbage();
+
+			int errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
+
+			particle_code++;
+
+			if( ticks.getTicks()){
+
+				try{
+
+					//initialises sprite array with a new sprite based on data passed in args
+					particles.add( new Sprite( part_name, particle_image));
+
+					//initialises that newly created sprite with all necissary properties to be a fully fledged working sprite
+					particles.get( particles.size() -1).setXY( getPosX() + getOffsetX(), getPosY() + getOffsetY());
+					particles.get( particles.size() -1).setAngle( errored_angle);
+					particles.get( particles.size() -1).setVelocity( getEmitter_particalvel());
+					particles.get( particles.size() -1).setmaxVelocity( getEmitter_particalvel());
+
+					//if gravity is true for the sprite
+					if( grav_effected){
+
+						//initialise for gravity conditions
+						particles.get( particles.size() -1).setGravityMode( grav_effected);
+						particles.get( particles.size() -1).setGravityAngle( 90);
+						particles.get( particles.size() -1).setGravity( 5);
+						particles.get( particles.size() -1).setThrustAngle( errored_angle);
+					}
+
+				//all sprites must be created in try and catch blocks, particles are no Exception!
+				}catch(Exception e){
+
+					//outputs name of specific particle causing an error on construction
+					System.out.println( "Error creating particle: " + part_name + particle_code + " :" + e.toString());
+				}
+			}
+		}
+
+		//draws and moves all particals
+		public void draw(){
+
+			for( int x = 0; x < particles.size() -1; x++){
+
+				particles.get( x).moveSprite();
+			}
+		}
+
+		//destroys a specific partical based on its name ( remember particle is name of Emitter plus number)
+		public void destroyPartical( String _name){
+
+			for( int x = 0; x < particles.size() -1; x++){
+
+				if( "particles.get( x).getEmitterName + particle_code" == _name){
+
+					particles.remove( x);
+				}
+			}
+		}
+
+		//checks all particals for collisions against the sprite in args
+		public boolean checkParticleCollisions( Sprite _spr){
+
+			for( int x = 0; x < particles.size() -1; x++){
+
+					return particles.get( x).checkCollision( _spr);
+			}
+
+			return false;
+		}
+
+		//removes a particle when it is of a set distance from the emitter default is 1500 pixels
+		public void garbage(){
+
+			for( int x = 0; x < particles.size() -1; x++){
+
+				if ( Math.abs(particles.get( x).getPosX() - getPosX()) > get_destructDistance() || ( Math.abs(particles.get( x).getPosY() - getPosY()) > get_destructDistance())){
+
+						particles.remove( x);
+				}
+			}
+		}
+
+
+		///////////////////////////////////////////////////////setters for each member variable\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		private void set_destructDistance(int _dd){
+
+			destruct_distance = _dd;
+		}
+
+		public void setEmitter_Error( int _error){
+
+			part_error = _error;
+		}
+
+		public void setEmitter_burst( int _burst){
+
+			part_burst = _burst;
+			ticks = new Ticks( _burst);
+		}
+
+		public void setEmitter_burstRate( int _burstRate){
+
+			part_burstRate = _burstRate;
+		}
+
+		//setters and getters for each value
+		public void setEmitter_angle( double _angle){
+
+			part_angle = _angle;
+		}
+
+		//setters and getters for each value
+		public void setEmitter_particalvel( int _particalvel){
+
+			particalvel = _particalvel;
+		}
+
+		//sets the offset from the top left point of the sprite that owns emitter
+		//to draw the sprite from
+		public void setEmitter_particalvel( int _x, int _y){
+
+			offsetX = _x;
+			offsetY = _y;
+		}
+
+		/////////////////////////////////////////////////////////////////////getters for each member variable\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		public int getEmitter_Error(){
+
+			return part_error;
+		}
+
+		public int getEmitter_burst(){
+
+			return part_burst;
+		}
+
+		public int getEmitter_burstRate(){
+
+			return part_burstRate;
+		}
+
+		//setters and getters for each value
+		public double getEmitter_angle(){
+
+			return part_angle;
+		}
+
+		//setters and getters for each value
+		public int getEmitter_particalvel(){
+
+			return particalvel;
+		}
+
+		private int get_destructDistance(){
+
+			return destruct_distance;
+		}
+
+		public int getOffsetX(){
+
+			return offsetX;
+		}
+
+		public int getOffsetY(){
+
+			return offsetY;
+		}
+
+		public String getEmitterName(){
+
+			return part_name;
+		}
+
+		public String getParticleName(){
+
+			return getEmitterName() + particle_code;
+		}
+
+	}//end of Emitter class
+
 
 	/**********************************************************************************************************************\\
 						stateSata makes two sprite managment strategies possible, States and Conditions.
 
 		CONDITIONS: if a sprite has reached a specific speed, angle or an increasing or decreasing velocity, the sprites
 		animation states are made to change to ones that fit, this is done by adding a condition to the conditions array
-		and having pollCOnditions in sprite check to see if the conditions of the sprite match any of the data, if they do the starting 
+		and having pollCOnditions in sprite check to see if the conditions of the sprite match any of the data, if they do the starting
 		and ending frames in frame loop are changed, ie;
 
 		function in sprite class is called on sprite object like this: my_sprite.addCondition( 0.0, 180.0, 10, 15),
@@ -938,7 +1264,7 @@ public class Sprite{
 	//this class manages the data for each state, objects of this class are to be saved in the stateArray
 	protected class stateData{
 
-		//variables to store state data 
+		//variables to store state data
 		String dName;
 		int dStart, dEnd, dHeight, dWidth, speedStart, speedEnd;
 		float dmaxVelocity, dvelocity, dacceleration;
@@ -963,7 +1289,7 @@ public class Sprite{
 		//if the angle is between _angleStart and _angleEnd then loop the animation between _dstart and _dend
 		protected stateData(double _aStart, double _aEnd, int _dstart, int _dend){
 
-		
+
 
 			//assign data from constructor
 			dStart = _dstart;
@@ -976,7 +1302,7 @@ public class Sprite{
 		//if the speed is between _speedStart and _speedEnd then loop the animation between _dstart and _dend
 		public stateData(int _speedStart, int _speedEnd, int _dstart, int _dend){
 
-		
+
 			//assign data from constructor
 			dStart = _dstart;
 			dEnd = _dend;
@@ -1020,7 +1346,7 @@ public class Sprite{
 							frameEnd = dEnd;
 						}
 					}
-					
+
 					break;
 
 				case "SPEED":
@@ -1059,7 +1385,7 @@ public class Sprite{
 					if( _condition < dvelocity){
 
 						if( !(dStart <= frameNum && frameNum <= dEnd)){
-							
+
 							frameNum = dStart;
 							frameStart = dStart;
 							frameEnd = dEnd;
@@ -1075,4 +1401,29 @@ public class Sprite{
 		}
 
 	}//end of stateData class
+
+	//this class takes an integer value as arguments, this value represents milliseconds
+	//the only function 'getTicks()' returns true if this amount of time has passed since it was
+	//last called, else it returns false
+	public class Ticks{
+
+		private double lastCall, timer;
+
+		public Ticks( double _timer){
+
+			timer = _timer;
+		}
+
+		public boolean getTicks(){
+
+			if( lastCall + timer > System.currentTimeMillis()){
+
+				lastCall = System.currentTimeMillis();
+				return true;
+			}else{
+
+				return false;
+			}
+		}
+	}
 }//end of sprite class

@@ -1,10 +1,10 @@
-// example Player class inherits from sprite, the image is loaded into super but manipulated 
+// example Player class inherits from sprite, the image is loaded into super but manipulated
 // in player class
 //
 //
-//							REFERENCES 
+//							REFERENCES
 //
-//https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html 
+//https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html
 //http://stackoverflow.com/questions/3505140/calling-a-base-class-constructor-from-derived-class-in-java
 //http://stackoverflow.com/questions/23932442/how-to-handle-an-exception-thrown-by-superclass-constructor-in-java
 
@@ -13,7 +13,7 @@ public class Player extends Sprite{
 
 	//int health, ammo, etc;
 
-	
+
 	//create player sprite here, throws an exception as base class also does
 	public Player() throws Exception{
 
@@ -38,9 +38,9 @@ public class Player extends Sprite{
 				//hes a bit slow
 				setVelocity( 4);
 				setmaxVelocity( 20);
-            
-                //Set player Bounds
-                setAllBounds(-20,  734, 600, 0);
+
+        //Set player Bounds
+        setAllBounds(-20,  734, 600, 0);
 
 			}catch(Exception e){
 
@@ -50,7 +50,7 @@ public class Player extends Sprite{
 
     public void outOfBoundsCheck() {
         System.out.println("x: " +getPosX() + " y: " + getPosY());
-        
+
         if(rightBound()) {
             setXY(734,getPosY());
             //System.out.println("out of right");
@@ -68,9 +68,9 @@ public class Player extends Sprite{
             //System.out.println("out of top");
         }
     }
-    
+
     public void positionAdjust( Sprite _sprite) {
-        
+
         if(checkCollision( _sprite)){
             int temp = getPosY();
             setXY(getPosX(), 417);
