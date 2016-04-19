@@ -194,6 +194,7 @@ public class Game extends Canvas implements Runnable{
           //  crab.outOfBoundsCheck();
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+            p1.drawEmitter("Gun", graphics);
         	
 
         	//must set colliding to true if player is colliding with any other sprite
@@ -393,7 +394,7 @@ public class Game extends Canvas implements Runnable{
 
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-
+            p1.fireGun(p1.getAngle());
 		}
 
 	}

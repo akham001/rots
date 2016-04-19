@@ -469,82 +469,83 @@ public class Sprite{
 		}
 	}
 
-	//this function checks if the collision was just to he left of the sprite
+	//this function checks if a collision was just to he left of the sprite
 	boolean checkCollisionLeft( Sprite _spr){
 
-		//create a collision rectangle based on sprite in args if width 10 in pixels
-		int rectL = _spr.getPosX() + 11;
-		int rectR = _spr.getPosX() + 1;
-
-		//this is a standard collision dectetion algorithm using the sprites dimensions
-		if(getPosX() + getWidth() > rectL && getPosX() < rectR &&
-       	getPosY() + getHeight() > _spr.getPosY() && getPosY() < _spr.getPosY() + _spr.getHeight()){
-
-			collideLeft = true;
-			return true;
-		}else{
-
-			collideLeft= false;
-			return false;
-		}
+        //creates the dimenstions for a box to the right of the sprite
+        int xbox = getPosX() -1;
+        int ybox = getPosY();
+        int wbox = 3;
+        int hbox = getHeight();
+        
+        //checks if sprite passed in arguments is colliding and returns true or false respecivley
+        if( xbox > _spr.getPosX() && xbox + wbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
+        
+            return true;
+        }else{
+        
+            return false;
+        }
 	}
 
 	//this function checks if the collision was just to he left of the sprite
 	boolean checkCollisionRight( Sprite _spr){
 
-		//create a collision rectangle based on sprite in args if width 10 in pixels
-		int rectL = _spr.getPosX() + _spr.getWidth() + 1;
-		int rectR = _spr.getPosX() + _spr.getWidth() + 11;
+        //creates the dimenstions for a box to the right of the sprite
+        int xbox = getPosX() +1;
+        int ybox = getPosY();
+        int wbox = 3;
+        int hbox = getHeight();
+        
+        //checks if sprite passed in arguments is colliding and returns true or false respecivley
+        if( xbox > _spr.getPosX() && xbox + wbox < _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
+            
+            return true;
+        }else{
+            
+            return false;
+        }
 
-		//this is a standard collision dectetion algorithm using the sprites dimensions
-		if(getPosX() + getWidth() > rectR && getPosX() < rectL &&
-       	getPosY() + getHeight() > _spr.getPosY() && getPosY() < _spr.getPosY() + _spr.getHeight()){
-
-			collideRight = true;
-			return true;
-		}else{
-
-			collideRight = false;
-			return false;
-		}
-	}
+    }
 
 	//this function checks if the collision was just to he left of the sprite
 	boolean checkCollisionAbove( Sprite _spr){
 
-		//create a collision rectangle based on sprite in args if width 10 in pixels
-		int rectD = _spr.getPosY() + _spr.getHeight() + 1;
-		int rectU = _spr.getPosX() + _spr.getHeight() + 11;
+        //creates the dimenstions for a box to the right of the sprite
+        int xbox = getPosX();
+        int ybox = getPosY() -1;
+        int wbox = getWidth();
+        int hbox = 3;
+        
+        //checks if sprite passed in arguments is colliding and returns true or false respecivley
+        if( xbox + wbox < _spr.getPosX() && xbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
+            
+            return true;
+        }else{
+            
+            return false;
+        }
 
-		if( getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
-       	getPosY() + getHeight() > rectU && getPosY() < rectD){
-
-			collideAbove = true;
-			return true;
-		}else{
-
-			collideAbove = false;
-			return false;
-		}
 	}
 
 	//this function checks if the collision was just to he left of the sprite
 	boolean checkCollisionBelow( Sprite _spr){
 
-		//create a collision rectangle based on sprite in args if width 10 in pixels
-		int rectU = _spr.getPosY() + _spr.getHeight() + 1;
-		int rectD = _spr.getPosY() + _spr.getHeight() + 11;
+        //creates the dimenstions for a box to the right of the sprite
+        int xbox = getPosX();
+        int ybox = getPosY() +1;
+        int wbox = getWidth();
+        int hbox = 3;
+        
+        //checks if sprite passed in arguments is colliding and returns true or false respecivley
+        if( xbox + wbox < _spr.getPosX() && xbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
+            
+            return true;
+        }else{
+            
+            return false;
+        }
 
-		if( getPosX() + getWidth() > _spr.getPosX() && getPosX() < _spr.getPosX() + _spr.getWidth() &&
-       	getPosY() < rectD && getPosY() > rectU){
-
-			collideBelow = true;
-			return true;
-		}else{
-
-			collideBelow = false;
-			return false;
-		}
 	}
 
 	//the following collisions detect if the player has left bounds that can be set in the constructor after the sprite
@@ -928,31 +929,42 @@ public class Sprite{
 	//fires one particle from the emitter
 	public void fireEmitter( String _name){
 
-		for( int e = 0; e < emitters.size() -1; e++){
+		for( int e = 0; e < emitters.size() ; e++){
 
 			if( emitters.get( e).getEmitterName() == _name){
-
+        
 				emitters.get( e).fire();
 			}
 		}
 	}
 
 	//draws particles in Emitter
-	public void drawEmitter( String _name){
+	public void drawEmitter( String _name, Graphics _gr2){
 
-		for( int e = 0; e < emitters.size() -1; e++){
+		for( int e = 0; e < emitters.size(); e++){
 
 			if( emitters.get( e).getEmitterName() == _name){
 
-				emitters.get( e).draw();
+				emitters.get( e).draw( _gr2);
 			}
 		}
 	}
+    
+    public void changeEmitterAngle( String _name, double _angle){
+        
+        for( int e = 0; e < emitters.size(); e++){
+            
+            if( emitters.get( e).getEmitterName() == _name){
+                
+                emitters.get( e).setEmitter_angle(_angle);
+            }
+        }
+    }
 
 	//activates a fountain or burst of particles
 	public void activateEmitterFountain( String _name){
 
-		for( int e = 0; e < emitters.size() -1; e++){
+		for( int e = 0; e < emitters.size(); e++){
 
 			if( emitters.get( e).getEmitterName() == _name){
 
@@ -963,7 +975,7 @@ public class Sprite{
 
 	public boolean detectParticleCollision( String _name, Sprite _spr){
 
-		for( int e = 0; e < emitters.size() -1; e++){
+		for( int e = 0; e < emitters.size(); e++){
 
 			if( emitters.get( e).checkParticleCollisions( _spr) && (emitters.get( e).getEmitterName() == _name)){
 
@@ -1057,13 +1069,15 @@ public class Sprite{
 		public void fire(){
 
 			//destroy particles on creation of new ones to save overhead
-			garbage();
+			//garbage();
+            
 
-			int errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
+			double errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
+            errored_angle = part_angle + errored_angle;
 
 			particle_code++;
 
-			if( ticks.getTicks()){
+			if( !ticks.getTicks()){
 
 				try{
 
@@ -1096,18 +1110,22 @@ public class Sprite{
 		}
 
 		//draws and moves all particals
-		public void draw(){
+		public void draw( Graphics gr2){
 
-			for( int x = 0; x < particles.size() -1; x++){
+			for( int x = 0; x < particles.size() ; x++){
 
 				particles.get( x).moveSprite();
+                
+                System.out.println( "!" + getParticleName() + " " + particle_code);
+                
+                gr2.drawImage( particles.get( x).getFrame(0), particles.get( x).getPosX(), particles.get( x).getPosY(), particles.get( x).getWidth(), particles.get( x).getHeight(), null);
 			}
 		}
 
 		//destroys a specific partical based on its name ( remember particle is name of Emitter plus number)
 		public void destroyPartical( String _name){
 
-			for( int x = 0; x < particles.size() -1; x++){
+			for( int x = 0; x < particles.size() ; x++){
 
 				if( "particles.get( x).getEmitterName + particle_code" == _name){
 
@@ -1119,7 +1137,7 @@ public class Sprite{
 		//checks all particals for collisions against the sprite in args
 		public boolean checkParticleCollisions( Sprite _spr){
 
-			for( int x = 0; x < particles.size() -1; x++){
+			for( int x = 0; x < particles.size() ; x++){
 
 					return particles.get( x).checkCollision( _spr);
 			}
@@ -1130,7 +1148,7 @@ public class Sprite{
 		//removes a particle when it is of a set distance from the emitter default is 1500 pixels
 		public void garbage(){
 
-			for( int x = 0; x < particles.size() -1; x++){
+			for( int x = 0; x < particles.size() ; x++){
 
 				if ( Math.abs(particles.get( x).getPosX() - getPosX()) > get_destructDistance() || ( Math.abs(particles.get( x).getPosY() - getPosY()) > get_destructDistance())){
 
@@ -1412,6 +1430,7 @@ public class Sprite{
 		public Ticks( double _timer){
 
 			timer = _timer;
+            lastCall = _timer;
 		}
 
 		public boolean getTicks(){
@@ -1425,5 +1444,5 @@ public class Sprite{
 				return false;
 			}
 		}
-	}
+	}//end of ticks class
 }//end of sprite class
