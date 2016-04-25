@@ -18,7 +18,7 @@ public class Player extends Sprite{
 	public Player() throws Exception{
 
 		//first thing to happen base class must be initialised
-		super("man", "data/states.png", 4, 12);
+		super("man", "data/badstickrun.png", 2, 7);
 
 		//sprites are created in try catch blocks
 		try{
@@ -38,9 +38,9 @@ public class Player extends Sprite{
 				//hes a bit slow
 				setVelocity( 4);
 				setmaxVelocity( 20);
-            
+
                 //emittor
-            addEmitter("Gun", "data/ball.jpeg", 20, 1, 1000, 270, 60, true);
+            addEmitter("Gun", "data/ball.png", 20, 1, 1000, 270, 60, true);
 
         //Set player Bounds
         setAllBounds(-20,  734, 600, 0);
@@ -80,7 +80,7 @@ public class Player extends Sprite{
            // System.out.println("true");
         }
     }
-    
+
     public void fireGun( double _angle) {
         changeEmitterAngle("Gun", _angle);
         fireEmitter("Gun");
