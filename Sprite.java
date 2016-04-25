@@ -980,7 +980,7 @@ public class Sprite{
 
 			if( emitters.get( e).getEmitterName() == _name){
 
-				emitters.get( e).createFountain();
+				emitters.get( e).runEmitter = true;
 			}
 		}
 	}
@@ -1018,7 +1018,7 @@ public class Sprite{
 		//this is to keep track of how many particals its made so it can stop at burst value
 		int particle_code, part_error, part_burstRate, particalvel, destruct_distance, offsetX, offsetY, part_burst, burstNum;
 		double part_angle, last_emition;
-		boolean grav_effected;
+		boolean grav_effected, runEmitter;
 
 		//the image of the particals
 		BufferedImage particle_image;
@@ -1053,7 +1053,7 @@ public class Sprite{
 				part_burstRate = _burstRate;
 
 				//this rate can be changed with a setter
-				ticks = new Ticks( part_burst);
+				ticks = new Ticks( _burstRate);
 
 				part_angle = _angle;
 				particalvel = _particalvel;
@@ -1061,37 +1061,54 @@ public class Sprite{
 
 				//this is the destance in which to remove the partical from the array to avoid too much over head default is 1500 in either x or y direction
 				//can be set to a different value
-				destruct_distance = 1500;
+				destruct_distance = 700;
 
 				//create the random number generator
 				rand = new Random();
+
+				//emitter starts in an off state
+				runEmitter = false;
+
+				//burstNUm is default 0;
+				burstNum = 0;
 		}
 
 		//creates x amount of new particles
 		public void createFountain(){
 
-			if( burstNum != getEmitter_burst()){
+			if( runEmitter){
+				if( burstNum != getEmitter_burst()){
 
-				fire();
-				burstNum++;
+					fire();
+				}else{
+
+					runEmitter = false;
+					burstNum = 0;
+				}
 			}
 		}
 
 		//adds one particle to particle array
 		public void fire(){
 
-			//destroy particles on creation of new ones to save overhead
-			//garbage();
+			//destroy particles after they have left the screen on creation of new ones to save a little overhead/java virtual memory
+			garbage();
 
-
-			double errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
-            errored_angle = part_angle + errored_angle;
-
-			particle_code++;
-
-			if( !ticks.getTicks()){
+			//if enough time has passed to allow the creation of another particle
+			if( ticks.getTicks()){
 
 				try{
+
+					//increases burstNum if fountain mode is activated
+					burstNum++;
+
+					//adds a slight error ot the angle when the particle is created
+					double errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
+								errored_angle = part_angle + errored_angle;
+
+					//increases particle code number in order to have a unique name for it
+					particle_code++;
+
 
 					//initialises sprite array with a new sprite based on data passed in args
 					particles.add( new Sprite( part_name, particle_image));
@@ -1121,8 +1138,11 @@ public class Sprite{
 			}
 		}
 
-		//draws and moves all particals
+		//draws and moves all particals, takes the graphics argument that will draw the images
 		public void draw( Graphics gr2){
+
+			//runs the emitter fountain if it has been activated, is in draw as draw will be called in the same way that emitter needs to be ran
+			createFountain();
 
 			for( int x = 0; x < particles.size() ; x++){
 
@@ -1135,11 +1155,12 @@ public class Sprite{
 		}
 
 		//destroys a specific partical based on its name ( remember particle is name of Emitter plus number)
-		public void destroyPartical( String _name){
+		public void destroyParticle( String _name){
 
 			for( int x = 0; x < particles.size() ; x++){
 
-				if( "particles.get( x).getEmitterName + particle_code" == _name){
+				//fix later
+				if( "getEmitterName() + toString(particle_code)" == _name){
 
 					particles.remove( x);
 				}
@@ -1437,22 +1458,24 @@ public class Sprite{
 	//last called, else it returns false
 	public class Ticks{
 
-		private double lastCall, timer;
+		private double gticks, startTime;
 
 		public Ticks( double _timer){
 
-			timer = _timer;
-            lastCall = _timer;
+			startTime = System.currentTimeMillis();
+      gticks = _timer;
 		}
 
 		public boolean getTicks(){
 
-			if( lastCall + timer > System.currentTimeMillis()){
+			if( (System.currentTimeMillis() - startTime) > gticks){
 
-				lastCall = System.currentTimeMillis();
+				//System.out.println("yes" +  (System.currentTimeMillis() - startTime) + " ->" + gticks);
+				startTime = System.currentTimeMillis();
 				return true;
 			}else{
 
+					//System.out.println("no" +  (System.currentTimeMillis() - startTime) + " ->" + gticks);
 				return false;
 			}
 		}

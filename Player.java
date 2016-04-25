@@ -42,7 +42,7 @@ public class Player extends Sprite{
 				setmaxVelocity( 20);
 
         //emitter
-        addEmitter( "Gun", "data/ball.png", 20, 3, 600, 270, 50, true);
+        addEmitter( "Gun", "data/ball.png", 10, 1, 60, 210, 70, false);
 
         //Set player Bounds to keep him within the screen
         setAllBounds( -20,  734, 600, 0);
@@ -88,7 +88,7 @@ public class Player extends Sprite{
     public void fireGun( double _angle) {
 
         changeEmitterAngle( "Gun", _angle);
-        fireEmitter( "Gun");
+        activateEmitterFountain( "Gun");
     }
 
 }

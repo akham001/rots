@@ -193,7 +193,7 @@ public class Game extends Canvas implements Runnable{
         	if( operation == "ESCAPE"){
 
         		menu = true;
-        	}else if( operation == "JUMP" && p1.getCollision() && !p1.checkCollisionBelow( plat2)){
+        	}else if( operation == "JUMP" ){
 
         		p1.setThrustAcceleration( 47);
 
@@ -242,17 +242,25 @@ public class Game extends Canvas implements Runnable{
   			//must set colliding to true if baddy is colliding with any other sprite
   			if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
 
-  				crab.setCollision( true);
+  				 crab.setCollision( true);
   			}
 
   			crab.moveSprite();
 
+			  //check if any of the players gun particles has collided with the crab object
+		   if ( p1.detectParticleCollision( "Gun", crab)){
 
-      //System.out.println(direction);
-	 		////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
+		 		 crab.hit();
+			 }
+
+			 crab.drawEmitter( "bloodFountain", graphics);
 
 
-	 		//clears graphics object once has been drawn to buffer to save memory leak
+       //System.out.println(direction);
+	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+	 	  //clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();
 
 	 		//shows image from buffer
