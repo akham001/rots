@@ -62,6 +62,9 @@ public class Game extends Canvas implements Runnable{
 	//static global Player object initialised in constructor
 	public Player p1;
 
+	//the players crosshair for aiming the gun
+	public Sprite crosshair;
+
 	//stores a single sprite to be used as a platform, level class is presently in temporary state
 	public Platform plat1, plat2;
 
@@ -93,6 +96,7 @@ public class Game extends Canvas implements Runnable{
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
+			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
 
 			//so crab doesnt fall too hard on the first platform at this stage
@@ -102,7 +106,7 @@ public class Game extends Canvas implements Runnable{
 			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/2 + p1.getHeight()));
 
 			//starting angle for player
-			p1.setAngle(0);
+			p1.setAngle( 0);
 
 			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
 			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
@@ -115,19 +119,19 @@ public class Game extends Canvas implements Runnable{
 			plat2.setWH( WIDTH/3, HEIGHT/20);
 
 			//safley initialise background image here
-			background = ImageIO.read(new File("data/background.png"));
-			menuBackground = ImageIO.read(new File("data/homescreen.png"));
+			background = ImageIO.read( new File( "data/background.png"));
+			menuBackground = ImageIO.read( new File( "data/homescreen.png"));
 
-		}catch(Exception e){
+		}catch( Exception e){
 
-			System.out.println("Game failed to initialise correctly.");
+			System.out.println( "Game failed to initialise correctly.");
 		}
 	}
 
-
-//////////////////////////////////////Next block contains the main game loop essentially,\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	///////////////////////////////the function draws each sprite to a buffer and then blits it\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////\\\\\\\\\\
+  ///////////\\\\\\\\\\\\\\\\\\/////////////\\\\\\\\\\\\\\////////////\\\\\\\\\\\\///////////\\\\\\\\\\\//////////\\\\\////\\\\\\\\\\\/\\\\\\\
+  //////////////////////////////////////Next block contains the main game loop essentially,\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	///////////////////////////////the function draws each sprite to a buffer and then blits it\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////\\\\\\\\\\////////\\\\\\\
 	private void drawGame(){
 
 		//manages multiple drawing to buffer
@@ -137,7 +141,7 @@ public class Game extends Canvas implements Runnable{
 		try {
 
 			//if buffer is not initialised ccreates new buffer to draw over
-			if(bs == null){
+			if( bs == null){
 
 				//two layers to buffer
 	    		createBufferStrategy(2);
@@ -146,17 +150,17 @@ public class Game extends Canvas implements Runnable{
 	    		return;
 	   		}
 
-	   		//initialises graphics with drawable objects from this class
+	   	//initialises graphics with drawable objects from this class
 	 		graphics = bs.getDrawGraphics();
 
-        	//////////////////////////////////////////////////////////////////////////
-        	//																		//
-        	//		GAME FUNCTIONS AND UPDATES HERE									//
-        	//																		//
-        	//////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////
+      //																																			//
+      //									GAME FUNCTIONS AND UPDATES HERE											//
+      //																																			//
+    	//////////////////////////////////////////////////////////////////////////
 
 
-        	//background image
+      //background image
 	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
 
         	if( getDirection() == "LEFT"){
@@ -171,14 +175,18 @@ public class Game extends Canvas implements Runnable{
         		graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
         	}else{
 
-        		graphics.drawImage( p1.getFrame(0), p1.getPosX(), p1.getPosY(), null);
+        		graphics.drawImage( p1.getFrame(1), p1.getPosX(), p1.getPosY(), null);
         		p1.setVelocity(0);
         	}
 
-        	p1.pollConditions("ANGLE");
+        	p1.pollConditions( "ANGLE");
         	p1.moveSprite();
           p1.outOfBoundsCheck();
-          p1.positionAdjust(plat1);
+          p1.positionAdjust( plat1);
+
+					//draw cross hair at location of pointer
+					crosshair.setXY( mouseX, mouseY);
+					graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
 
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
@@ -194,7 +202,7 @@ public class Game extends Canvas implements Runnable{
         	}
 
         	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
-					
+
           //  crab.outOfBoundsCheck();
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
@@ -203,7 +211,7 @@ public class Game extends Canvas implements Runnable{
           p1.drawEmitter("Gun", graphics);
 
 
-        	//must set colliding to true if player is colliding with any other sprite
+        //must set colliding to true if player is colliding with any other sprite
   			if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
 
   				p1.setCollision( true);
@@ -229,7 +237,8 @@ public class Game extends Canvas implements Runnable{
   				System.out.println(" DANGLEH DAHN");
   			}
 
-            crab.outOfBoundsCheck();
+        crab.outOfBoundsCheck();
+
   			//must set colliding to true if baddy is colliding with any other sprite
   			if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
 
@@ -239,7 +248,7 @@ public class Game extends Canvas implements Runnable{
   			crab.moveSprite();
 
 
-            //System.out.println(direction);
+      //System.out.println(direction);
 	 		////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -259,9 +268,10 @@ public class Game extends Canvas implements Runnable{
         Toolkit.getDefaultToolkit().sync();
 	}
 
-//////////////////////////like the main game loop but for the menu instead\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	//this function draws each sprite to a buffer and then flips it\\
-	///\/\/\/\/\\/\\\\////\\\////\\\\////\\\\/////\\\\\///\/\/\/\/\\\////\\\\///\\\//\\
+	//\\\///\\\////\\\\/////\\\\////\\\\/////\\\\\\///////\\\\\\\\/////////\\\\\\\\////\\\///\\\\////\\\\
+  //////////////////////////like the main game loop but for the menu instead\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	///////////////////////this function draws each sprite to a buffer and then flips it\\\\\\\\\\\\\\\\\
+	///\/\/\/\/\\/\\\\////\\\////\\\\////\\\\////\\\\///\\///\\/////\\\\\///\/\/\/\/\\\////\\\\///\\\//\\
 	private void drawMenu(){
 
 		//manages multiple drawing to buffer
@@ -280,31 +290,29 @@ public class Game extends Canvas implements Runnable{
 	    		return;
 	   		}
 
-	   		//initialises graphics with drawable objects from this class
+	   	//initialises graphics with drawable objects from this class
 	 		graphics = bs.getDrawGraphics();
 
-        	//////////////////////////////////////////////////////////////////////////
-        	//																	                                  	//
-        	//		MENU FUNCTIONS AND UPDATES HERE							                   		//
-        	//																		                                  //
-        	//////////////////////////////////////////////////////////////////////////
-
-
-        	//background
-	 		graphics.setColor(Color.BLACK);
+    	///////////////////////////////////////////////////////////////////\\\\\\\
+      //																	                                  	\\
+      //									MENU FUNCTIONS AND UPDATES HERE		               		\\
+      //																		                                  \\
+      ///////////////////////////////////////////////////////////////////\\\\\\\
       graphics.drawImage( menuBackground, 0, 0, WIDTH, HEIGHT, null);
 
       //sets last element of buttons array (an image of a mouse pointer) to be at same position as mouse x and y
       options.buttons.get(options.buttons.size()-1).setXY( mouseX - options.buttons.get(options.buttons.size()-1).getWidth()/2, mouseY - options.buttons.get(options.buttons.size()-1).getHeight()/2);
 
-      //draws the menu buttons
-      options.drawMenu( graphics);
+			//draws the menu buttons
+			options.drawMenu( graphics);
+
+			//shows image from buffer
+	 		bs.show();
 
 	 		//clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();
 
-	 		//shows image from buffer
-	 		bs.show();
+
 
 		}catch(Exception e){
 
@@ -314,20 +322,7 @@ public class Game extends Canvas implements Runnable{
         //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
         //as though frames being drawn evenly in time but not without.
         Toolkit.getDefaultToolkit().sync();
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
+	}////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////end of the menu class and game loops\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	//\\//\\///\\///\\//\\///\\///\\///\\\////\\\\/////\\\\\/////\\\///\\\///\\///\\//\\///\\
 
@@ -355,7 +350,7 @@ public class Game extends Canvas implements Runnable{
       	try{
 
             //temporary delay, must be calculated in relation to CPU speed of users computer
-        	Thread.sleep(50);
+        	Thread.sleep(40);
         }catch(Exception e){
 
         	System.out.println("error in main game thread");
@@ -416,33 +411,29 @@ public class Game extends Canvas implements Runnable{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-            p1.fireGun(p1.getAngle());
+
+            p1.fireGun( p1.getAngleTo( crosshair));
 		}
 
 	}
 
 	class mouseMotion implements MouseMotionListener {
 
-		public void mouseDragged(MouseEvent arg0) {
+		public void mouseDragged( MouseEvent arg0) {
 			// TODO Auto-generated method stub
 
 		}
 
-		public void mouseMoved(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseMoved( MouseEvent arg0) {
 
 			mouseX = arg0.getX();
-
-            mouseY = arg0.getY();
-
-			//System.out.println(mouseX + "  " + mouseY);
+      mouseY = arg0.getY();
+		//	System.out.println(mouseX + "  " + mouseY);
 		}
-
 	}
 
 
-    //used oracle documentation for this keypress block -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
+  //used oracle documentation for this keypress block -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
 	public class keyListen extends KeyAdapter {
 
 		public void keyPressed(KeyEvent e) {
@@ -496,7 +487,7 @@ public class Game extends Canvas implements Runnable{
 
 			int keyCode = e.getKeyCode();
 
-			switch( keyCode ) {
+			switch( keyCode) {
 
         		case KeyEvent.VK_UP:
 

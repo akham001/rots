@@ -477,13 +477,13 @@ public class Sprite{
         int ybox = getPosY();
         int wbox = 3;
         int hbox = getHeight();
-        
+
         //checks if sprite passed in arguments is colliding and returns true or false respecivley
         if( xbox > _spr.getPosX() && xbox + wbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
-        
+
             return true;
         }else{
-        
+
             return false;
         }
 	}
@@ -496,13 +496,13 @@ public class Sprite{
         int ybox = getPosY();
         int wbox = 3;
         int hbox = getHeight();
-        
+
         //checks if sprite passed in arguments is colliding and returns true or false respecivley
         if( xbox > _spr.getPosX() && xbox + wbox < _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
-            
+
             return true;
         }else{
-            
+
             return false;
         }
 
@@ -516,13 +516,13 @@ public class Sprite{
         int ybox = getPosY() -1;
         int wbox = getWidth();
         int hbox = 3;
-        
+
         //checks if sprite passed in arguments is colliding and returns true or false respecivley
         if( xbox + wbox < _spr.getPosX() && xbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
-            
+
             return true;
         }else{
-            
+
             return false;
         }
 
@@ -536,13 +536,13 @@ public class Sprite{
         int ybox = getPosY() +1;
         int wbox = getWidth();
         int hbox = 3;
-        
+
         //checks if sprite passed in arguments is colliding and returns true or false respecivley
         if( xbox + wbox < _spr.getPosX() && xbox > _spr.getPosX() && ybox + hbox < _spr.getPosY() && ybox > _spr.getPosY()){
-            
+
             return true;
         }else{
-            
+
             return false;
         }
 
@@ -622,6 +622,13 @@ public class Sprite{
 		setAngle( angleTo);
 	}
 
+	//this function will set the angle to be pointing towards the sprite in args
+	public double getAngleTo( Sprite _sprite){
+
+		return Math.toDegrees( Math.atan2( _sprite.getPosY() - getPosY(), _sprite.getPosX() - getPosX()));
+	}
+
+
 	//this function moves the sprite one unit towards its present vector each time it is called each time it is called
 	public void moveSprite(){
 
@@ -700,8 +707,13 @@ public class Sprite{
 	}
 
 	//////////////////////////////
-	//	Getters and Setters		//
+	//	Getters and Setters	   	//
 	//////////////////////////////
+
+	public int getFrameNumber(){
+
+		return frameNum;
+	}
 
 	//setting  sprites bounds collisions
 	public void setAllBounds(int _left, int _right, int _top, int _bottom){
@@ -932,7 +944,7 @@ public class Sprite{
 		for( int e = 0; e < emitters.size() ; e++){
 
 			if( emitters.get( e).getEmitterName() == _name){
-        
+
 				emitters.get( e).fire();
 			}
 		}
@@ -949,13 +961,13 @@ public class Sprite{
 			}
 		}
 	}
-    
+
     public void changeEmitterAngle( String _name, double _angle){
-        
+
         for( int e = 0; e < emitters.size(); e++){
-            
+
             if( emitters.get( e).getEmitterName() == _name){
-                
+
                 emitters.get( e).setEmitter_angle(_angle);
             }
         }
@@ -1070,7 +1082,7 @@ public class Sprite{
 
 			//destroy particles on creation of new ones to save overhead
 			//garbage();
-            
+
 
 			double errored_angle = rand.nextInt( getEmitter_Error()) - getEmitter_Error();
             errored_angle = part_angle + errored_angle;
@@ -1115,9 +1127,9 @@ public class Sprite{
 			for( int x = 0; x < particles.size() ; x++){
 
 				particles.get( x).moveSprite();
-                
-                System.out.println( "!" + getParticleName() + " " + particle_code);
-                
+
+                //System.out.println( "!" + getParticleName() + " " + particle_code);
+
                 gr2.drawImage( particles.get( x).getFrame(0), particles.get( x).getPosX(), particles.get( x).getPosY(), particles.get( x).getWidth(), particles.get( x).getHeight(), null);
 			}
 		}
