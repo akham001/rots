@@ -443,7 +443,7 @@ public class Sprite{
 	//adds a new frame to frame array
 	public void addFrame( BufferedImage _img){
 
-		frames.add(_img);
+		frames.add( _img);
 	}
 
 	//replaces a frame, first arg is frame second arg is position in array if frame to replace

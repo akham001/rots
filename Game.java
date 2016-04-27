@@ -12,7 +12,10 @@ import java.awt.event.MouseMotionListener;
 import java.awt.MouseInfo;
 import java.awt.event.KeyListener;
 import java.awt.Image;
+import javax.imageio.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -94,6 +97,8 @@ public class Game extends Canvas implements Runnable{
 
 		try{
 
+			loadImages( "data/running_sprites", "run_", ".png" );
+
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
@@ -103,7 +108,7 @@ public class Game extends Canvas implements Runnable{
 
             //Portal position to enter next level
             portal1.setXY(WIDTH - (WIDTH/12), HEIGHT/4);
-            
+
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
 
@@ -118,13 +123,13 @@ public class Game extends Canvas implements Runnable{
 			plat1 = new Platform( 0 , HEIGHT - HEIGHT/20);
 
 			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
-            
+
             plat3 = new Platform( WIDTH/2, HEIGHT/3);
 
 			plat1.setWH( WIDTH , HEIGHT/20);
 
 			plat2.setWH( WIDTH/3, HEIGHT/20);
-            
+
             plat3.setWH( WIDTH/3, HEIGHT/20);
 
 			//safley initialise background image here
@@ -196,7 +201,7 @@ public class Game extends Canvas implements Runnable{
 					//draw cross hair at location of pointer
 					crosshair.setXY( mouseX, mouseY);
 					graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
-            
+
             //graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
 
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
@@ -206,7 +211,7 @@ public class Game extends Canvas implements Runnable{
         		menu = true;
         	}
             if( operation == "JUMP" ){
-                
+
         		p1.setThrustAcceleration( 47);
         		//reset operation to none
         		operation = "NONE";
@@ -675,5 +680,66 @@ Toolkit.getDefaultToolkit().sync();
 
 			typed = e.getKeyCode();
 		}
+	}
+
+	//loads images from a file ant returns a contact sheet
+	public void loadImages( String _path, String _name, String _extension) {
+
+			//get number of files in folder
+			int _FILES = new File( _path).listFiles().length;
+
+			//an array list of all all temporary Files
+			ArrayList<BufferedImage> tmpimgar = new ArrayList<BufferedImage>();
+
+			//stores total width of sheet
+			int totalWidth = 0;
+
+			///stores height, this can be upgraded when loading from multiple sprite
+			//image files later
+			int height = 0;
+
+			try {
+
+				for( int x = 1; x < _FILES; x++) {
+
+						System.out.println( _name + _FILES + _extension);
+						BufferedImage temp = ImageIO.read( new File( _name + _FILES + _extension));
+						totalWidth += temp.getWidth();
+
+						//uses the height from the bigest sprite
+						if( height < temp.getHeight()){
+
+							height =  temp.getHeight();
+						}
+
+						//adds the temp image to the array list
+						tmpimgar.add( temp);
+				}
+
+				//would add total height in another loop here when the code is upgraded to
+				//load from multiple files
+
+				//creates a temporary buffered image of a set size based on file data
+				BufferedImage img = new BufferedImage( totalWidth, height, BufferedImage.TYPE_INT_ARGB);
+				Graphics grd = (Graphics) img.getGraphics();
+
+				//pastes sub images onto img
+				for( int x = 0; x < tmpimgar.size()-1; x++){
+
+					//y value is zero for now but this function may be altered to make a contact sheet out of all sub files
+					grd.drawImage( tmpimgar.get(x), x * totalWidth / tmpimgar.size(), 0, null);
+				}
+
+				//saves the image as the name of hte images without hte numbers before them
+				File output = new File( _name + _extension);
+
+				//writes the file into existence
+				ImageIO.write( img, _extension.substring( 1), output);
+
+				System.out.println( img.getWidth());
+			}catch (Exception e) {
+
+					System.out.println( "error in function game/ loadImages: " + e.getMessage());
+			}
 	}
 }
