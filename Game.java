@@ -97,17 +97,18 @@ public class Game extends Canvas implements Runnable{
 
 		try{
 
-			loadImages( "data/running_sprites", "run_", ".png" );
+			//presently used to make contact sheets
+			//loadImages( "data/running_sprites/", "run_", ".png" );
 
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
 			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
-            portal1 = new Sprite("portal", "data/crosshair.png", 1, 1);
+      portal1 = new Sprite("portal", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
 
-            //Portal position to enter next level
-            portal1.setXY(WIDTH - (WIDTH/12), HEIGHT/4);
+      //Portal position to enter next level
+      portal1.setXY(WIDTH - (WIDTH/12), HEIGHT/4);
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
@@ -124,13 +125,13 @@ public class Game extends Canvas implements Runnable{
 
 			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
 
-            plat3 = new Platform( WIDTH/2, HEIGHT/3);
+      plat3 = new Platform( WIDTH/2, HEIGHT/3);
 
 			plat1.setWH( WIDTH , HEIGHT/20);
 
 			plat2.setWH( WIDTH/3, HEIGHT/20);
 
-            plat3.setWH( WIDTH/3, HEIGHT/20);
+      plat3.setWH( WIDTH/3, HEIGHT/20);
 
 			//safley initialise background image here
 			background = ImageIO.read( new File( "data/background.png"));
@@ -149,7 +150,7 @@ public class Game extends Canvas implements Runnable{
 	private void drawGame(){
 
 		//manages multiple drawing to buffer
-	    bs = getBufferStrategy();
+	  bs = getBufferStrategy();
 
  		//try catch block
 		try {
@@ -202,8 +203,6 @@ public class Game extends Canvas implements Runnable{
 					crosshair.setXY( mouseX, mouseY);
 					graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
 
-            //graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
-
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
         	if( operation == "ESCAPE"){
@@ -212,18 +211,25 @@ public class Game extends Canvas implements Runnable{
         	}
             if( operation == "JUMP" ){
 
+						//sets thrust to work against gravity
         		p1.setThrustAcceleration( 47);
+
         		//reset operation to none
         		operation = "NONE";
         	}
-            System.out.println(p1.getThrustAcceleration());
+
+					//handfull of output messages usefull for debugging
+					//graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
+          //System.out.println(p1.getThrustAcceleration());
+					System.out.println ("pos x is: " + p1.getPosX() + " and y: " + p1.getPosY());
+					//System.out.println(direction);
 
         	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
 
           //  crab.outOfBoundsCheck();
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
-            graphics.drawImage( plat3.getFrame(0), plat3.getPosX(), plat3.getPosY(), plat3.getWidth(), plat3.getHeight(), null);
+          graphics.drawImage( plat3.getFrame(0), plat3.getPosX(), plat3.getPosY(), plat3.getWidth(), plat3.getHeight(), null);
 
 					//draws the partical emmitters paricles for the player.
           p1.drawEmitter("Gun", graphics);
@@ -272,9 +278,6 @@ public class Game extends Canvas implements Runnable{
 			 }
 
 			 crab.drawEmitter( "bloodFountain", graphics);
-
-
-       System.out.println(direction);
 	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -358,11 +361,6 @@ p1.setThrustAcceleration( 47);
 operation = "NONE";
 }
 
-graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
-
-//  crab.outOfBoundsCheck();
-graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
 
 //draws the partical emmitters paricles for the player.
 p1.drawEmitter("Gun", graphics);
@@ -394,25 +392,6 @@ if(p1.checkCollisionBelow( plat2)){
 System.out.println(" DANGLEH DAHN");
 }
 
-crab.outOfBoundsCheck();
-
-//must set colliding to true if baddy is colliding with any other sprite
-if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
-
-crab.setCollision( true);
-}
-
-crab.moveSprite();
-
-//check if any of the players gun particles has collided with the crab object
-if ( p1.detectParticleCollision( "Gun", crab)){
-
-crab.hit();
-}
-
-crab.drawEmitter( "bloodFountain", graphics);
-
-
 //System.out.println(direction);
 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -425,7 +404,7 @@ bs.show();
 
 }catch(Exception e){
 
-System.out.println("Error in draw function of Game: " + e.toString());
+System.out.println("Error in draw function of level 2: " + e.toString());
 }
 
 //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
@@ -466,7 +445,7 @@ Toolkit.getDefaultToolkit().sync();
       graphics.drawImage( menuBackground, 0, 0, WIDTH, HEIGHT, null);
 
       //sets last element of buttons array (an image of a mouse pointer) to be at same position as mouse x and y
-      options.buttons.get(options.buttons.size()-1).setXY( mouseX - options.buttons.get(options.buttons.size()-1).getWidth()/2, mouseY - options.buttons.get(options.buttons.size()-1).getHeight()/2);
+      options.buttons.get( options.buttons.size()-1).setXY( mouseX - options.buttons.get(options.buttons.size()-1).getWidth()/2, mouseY - options.buttons.get(options.buttons.size()-1).getHeight()/2);
 
 			//draws the menu buttons
 			options.drawMenu( graphics);
@@ -700,10 +679,11 @@ Toolkit.getDefaultToolkit().sync();
 
 			try {
 
-				for( int x = 1; x < _FILES; x++) {
+				for( int x = 1; x < _FILES +1; x++) {
 
-						System.out.println( _name + _FILES + _extension);
-						BufferedImage temp = ImageIO.read( new File( _name + _FILES + _extension));
+						String filename =  _path + _name + String.valueOf( x) + _extension;
+						System.out.println( filename);
+						BufferedImage temp = ImageIO.read( new File( filename));
 						totalWidth += temp.getWidth();
 
 						//uses the height from the bigest sprite
@@ -724,7 +704,7 @@ Toolkit.getDefaultToolkit().sync();
 				Graphics grd = (Graphics) img.getGraphics();
 
 				//pastes sub images onto img
-				for( int x = 0; x < tmpimgar.size()-1; x++){
+				for( int x = 0; x < tmpimgar.size(); x++){
 
 					//y value is zero for now but this function may be altered to make a contact sheet out of all sub files
 					grd.drawImage( tmpimgar.get(x), x * totalWidth / tmpimgar.size(), 0, null);

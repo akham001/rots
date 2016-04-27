@@ -124,10 +124,10 @@ public class Sprite{
 			name = _name;
 
 			//temporary load image function
-			contactSheet = ImageIO.read(new File(_path));
+			contactSheet = ImageIO.read( new File( _path));
 
 			//init frames array
-			initFrames(_rows, _cols);
+			initFrames( _rows, _cols);
 
 			//set default state of sprite, if an uneven table this will need to be over written
 			//to create an alternative default state that will not draw the blank frames
@@ -234,7 +234,7 @@ public class Sprite{
 			for(int c = 0; c < _cols; c++){
 
 				//this function uses the available variables to slice up the contact sheet in even parts
-				frames.add(contactSheet.getSubimage( c * width, r * height, width, height));
+				frames.add( contactSheet.getSubimage( c * width, r * height, width, height));
 			}
 		}
 	}

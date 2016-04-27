@@ -18,8 +18,8 @@ public class Player extends Sprite{
 	public Player() throws Exception{
 
 		//first thing to happen base class must be initialised
-		super( "man", "data/crosshair.png", 1, 1);
-    
+		super( "man", "data/run_.png", 1, 10);
+
 
 		//sprites are created in try catch blocks
 		try{
@@ -35,8 +35,8 @@ public class Player extends Sprite{
 				setThrustAngle( 270);
 
 				//initialise for what animations to play while in which directions
-				addAngleCondition( -10, 10, 2, 10);
-				addAngleCondition( 170, 190, 2, 10);
+				addAngleCondition( -10, 10, 1, 10);
+				addAngleCondition( 170, 190, 1, 10);
 
 				//hes a bit slow
 				setVelocity( 4);
