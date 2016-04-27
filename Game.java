@@ -64,9 +64,10 @@ public class Game extends Canvas implements Runnable{
 
 	//the players crosshair for aiming the gun
 	public Sprite crosshair;
+    public Sprite portal1;
 
 	//stores a single sprite to be used as a platform, level class is presently in temporary state
-	public Platform plat1, plat2;
+	public Platform plat1, plat2, plat3;
 
 	//stores a single baddy, this is for demo
 	public Baddy crab;
@@ -97,8 +98,12 @@ public class Game extends Canvas implements Runnable{
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
 			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
+            portal1 = new Sprite("portal", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
 
+            //Portal position to enter next level
+            portal1.setXY(WIDTH - (WIDTH/12), HEIGHT/4);
+            
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
 
@@ -113,10 +118,14 @@ public class Game extends Canvas implements Runnable{
 			plat1 = new Platform( 0 , HEIGHT - HEIGHT/20);
 
 			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
+            
+            plat3 = new Platform( WIDTH/2, HEIGHT/3);
 
 			plat1.setWH( WIDTH , HEIGHT/20);
 
 			plat2.setWH( WIDTH/3, HEIGHT/20);
+            
+            plat3.setWH( WIDTH/3, HEIGHT/20);
 
 			//safley initialise background image here
 			background = ImageIO.read( new File( "data/background.png"));
@@ -187,32 +196,36 @@ public class Game extends Canvas implements Runnable{
 					//draw cross hair at location of pointer
 					crosshair.setXY( mouseX, mouseY);
 					graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
+            
+            //graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
 
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
         	if( operation == "ESCAPE"){
 
         		menu = true;
-        	}else if( operation == "JUMP" ){
-
+        	}
+            if( operation == "JUMP" ){
+                
         		p1.setThrustAcceleration( 47);
-
         		//reset operation to none
         		operation = "NONE";
         	}
+            System.out.println(p1.getThrustAcceleration());
 
         	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
 
           //  crab.outOfBoundsCheck();
         	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+            graphics.drawImage( plat3.getFrame(0), plat3.getPosX(), plat3.getPosY(), plat3.getWidth(), plat3.getHeight(), null);
 
 					//draws the partical emmitters paricles for the player.
           p1.drawEmitter("Gun", graphics);
 
 
         //must set colliding to true if player is colliding with any other sprite
-  			if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
+  			if(p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) ){
 
   				p1.setCollision( true);
   			}
@@ -256,7 +269,7 @@ public class Game extends Canvas implements Runnable{
 			 crab.drawEmitter( "bloodFountain", graphics);
 
 
-       //System.out.println(direction);
+       System.out.println(direction);
 	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -275,6 +288,145 @@ public class Game extends Canvas implements Runnable{
         //as though frames being drawn evenly in time but not without.
         Toolkit.getDefaultToolkit().sync();
 	}
+
+// level 2
+private void drawGame2(){
+
+//manages multiple drawing to buffer
+bs = getBufferStrategy();
+
+//try catch block
+try {
+
+//if buffer is not initialised ccreates new buffer to draw over
+if( bs == null){
+
+//two layers to buffer
+createBufferStrategy(2);
+
+//returns buffer to canvas for draw
+return;
+}
+
+//initialises graphics with drawable objects from this class
+graphics = bs.getDrawGraphics();
+
+
+//background image  ///TO DO another background for next stage
+graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
+
+if( getDirection() == "LEFT"){
+
+p1.setAngle(180);
+p1.setVelocity(5);
+graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+}else if( getDirection() == "RIGHT"){
+
+p1.setAngle(0);
+p1.setVelocity(5);
+graphics.drawImage( p1.nextFrame(), p1.getPosX(), p1.getPosY(), null);
+}else{
+
+graphics.drawImage( p1.getFrame(1), p1.getPosX(), p1.getPosY(), null);
+p1.setVelocity(0);
+}
+
+p1.pollConditions( "ANGLE");
+p1.moveSprite();
+p1.outOfBoundsCheck();
+p1.positionAdjust( plat1);
+
+//draw cross hair at location of pointer
+crosshair.setXY( mouseX, mouseY);
+graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
+
+//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
+//in menu
+if( operation == "ESCAPE"){
+
+menu = true;
+}else if( operation == "JUMP" ){
+
+p1.setThrustAcceleration( 47);
+
+//reset operation to none
+operation = "NONE";
+}
+
+graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
+
+//  crab.outOfBoundsCheck();
+graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+
+//draws the partical emmitters paricles for the player.
+p1.drawEmitter("Gun", graphics);
+
+
+//must set colliding to true if player is colliding with any other sprite
+if(p1.checkCollision( plat1) || p1.checkCollision( plat2)){
+
+p1.setCollision( true);
+}
+
+if(p1.checkCollisionLeft( plat2)){
+
+System.out.println(" DANGLEH LEFT");
+}
+
+if(p1.checkCollisionRight( plat2)){
+
+System.out.println(" DANGLEH RIGHT");
+}
+
+if(p1.checkCollisionAbove( plat2)){
+
+System.out.println(" DANGLEH UP");
+}
+
+if(p1.checkCollisionBelow( plat2)){
+
+System.out.println(" DANGLEH DAHN");
+}
+
+crab.outOfBoundsCheck();
+
+//must set colliding to true if baddy is colliding with any other sprite
+if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
+
+crab.setCollision( true);
+}
+
+crab.moveSprite();
+
+//check if any of the players gun particles has collided with the crab object
+if ( p1.detectParticleCollision( "Gun", crab)){
+
+crab.hit();
+}
+
+crab.drawEmitter( "bloodFountain", graphics);
+
+
+//System.out.println(direction);
+////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+//clears graphics object once has been drawn to buffer to save memory leak
+graphics.dispose();
+
+//shows image from buffer
+bs.show();
+
+}catch(Exception e){
+
+System.out.println("Error in draw function of Game: " + e.toString());
+}
+
+//Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
+//as though frames being drawn evenly in time but not without.
+Toolkit.getDefaultToolkit().sync();
+}
 
 	//\\\///\\\////\\\\/////\\\\////\\\\/////\\\\\\///////\\\\\\\\/////////\\\\\\\\////\\\///\\\\////\\\\
   //////////////////////////like the main game loop but for the menu instead\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -480,7 +632,7 @@ public class Game extends Canvas implements Runnable{
 
 	            	case KeyEvent.VK_SPACE :
 
-	            		operation = "JUMP";
+                        operation = "JUMP";
 	            	break;
 
 	            	case KeyEvent.VK_ESCAPE :
