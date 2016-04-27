@@ -18,7 +18,7 @@ public class Player extends Sprite{
 	public Player() throws Exception{
 
 		//first thing to happen base class must be initialised
-		super( "man", "data/run_left_stick.png", 2, 9);
+		super( "man", "data/run_left_sheet.png", 2, 9);
 
 		//sprites are created in try catch blocks
 		try{
