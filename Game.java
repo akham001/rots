@@ -47,7 +47,7 @@ public class Game extends Canvas implements Runnable{
 	Menu options;
 
 	//flag to end menu options
-	boolean menu;
+	boolean menu, level1, level2, level3;
 
 	//this stores the last up down left or right arrow to be pressed as lUP, lDown, lRight, lLeft, or if the arrows are activley being pressed it stores UP DOWN LEFT or RIGHT
 	//starts with none as default
@@ -76,7 +76,7 @@ public class Game extends Canvas implements Runnable{
 
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor, next is the image for the background of the menu
-	public Image background, menuBackground;
+	public Image background, background2, menuBackground;
 
 	//constructor for game class
 	public Game( int _W, int _H){
@@ -99,6 +99,24 @@ public class Game extends Canvas implements Runnable{
 			//presently used to make contact sheets
 			//loadImages( "data/normal-jump/", "jump", ".png" );
 
+			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
+			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
+			plat1 = new Platform( 0 , HEIGHT - HEIGHT/20);
+
+			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
+
+			plat3 = new Platform( WIDTH - WIDTH/3, HEIGHT/3);
+
+			plat4 = new Platform( WIDTH/2 , HEIGHT - HEIGHT/4);
+
+			plat1.setWH( WIDTH , HEIGHT/20);
+
+			plat2.setWH( WIDTH/3, HEIGHT/20);
+
+			plat3.setWH( WIDTH/3, HEIGHT/20);
+
+			plat4.setWH( WIDTH/10, HEIGHT/20);
+
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
 			p1 = new Player();
@@ -114,26 +132,9 @@ public class Game extends Canvas implements Runnable{
 			//starting angle for player
 			p1.setAngle( 0);
 
-			//platform must take in relative dimensions, x position is from one tenth from the left, height is starting at the bootom of the screen minus
-			//the height of the platform plus a little bit to show the base of the platform, width is width of screen minus two tenths and height can stay the same
-			plat1 = new Platform( 0 , HEIGHT - HEIGHT/20);
-
-			plat2 = new Platform( WIDTH/20 , HEIGHT/2);
-
-      plat3 = new Platform( WIDTH - WIDTH/3, HEIGHT/3);
-
-			plat4 = new Platform( WIDTH/2 , HEIGHT - HEIGHT/4);
-
-			plat1.setWH( WIDTH , HEIGHT/20);
-
-			plat2.setWH( WIDTH/3, HEIGHT/20);
-
-      plat3.setWH( WIDTH/3, HEIGHT/20);
-
-			plat4.setWH( WIDTH/10, HEIGHT/20);
-
 			//safley initialise background image here
 			background = ImageIO.read( new File( "data/background.png"));
+			background2 = ImageIO.read( new File( "data/level2.png"));
 			menuBackground = ImageIO.read( new File( "data/homescreen.png"));
 
 		}catch( Exception e){
@@ -158,7 +159,7 @@ public class Game extends Canvas implements Runnable{
 			if( bs == null){
 
 				//use one or two layers to buffer sprites if needed
-	    	createBufferStrategy(2);
+	    	createBufferStrategy(1);
 
 	    		//returns buffer to canvas for draw in jpanel
 	    		return;
@@ -224,7 +225,23 @@ public class Game extends Canvas implements Runnable{
 			 //if player in following bounds start level 2
 			 if( p1.getPosX() > ( WIDTH - WIDTH/10) && p1.getPosY() < HEIGHT/3){
 
-				 System.out.println( "kk start level 2 some how");
+				//level logic is simple, if not in level one then in the next level
+				//and so on
+				level1 = false;
+				level2 = true;
+
+				//if the crab was not killed move that too
+				crab.setXY( - 200, HEIGHT);
+
+				 //sets the players x and y position for the next level
+				p1.setXY( 30, 30);
+
+				//get rid of platform three and four by moving them off the screen, keeping platform two just making it longer and moving it over
+				plat3.setXY( - 200, -100);
+				plat4.setXY( - 200, -100);
+
+				//moving plat2 over
+				plat2.setXY( WIDTH - WIDTH/3, HEIGHT/2);
 			 }
 	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -258,7 +275,7 @@ try {
 if( bs == null){
 
 //two layers to buffer
-createBufferStrategy(2);
+createBufferStrategy(1);
 
 //returns buffer to canvas for draw
 return;
@@ -269,7 +286,70 @@ return;
 //////\\\\\\\\\\\\\\\\\//////////////////////\\\\\\\\\\\\\\\\\//////////////////\\\\\\\\\\\\\\///////////////////////////
 
 //background image
-//graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
+graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
+
+playerLogic();
+
+graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+graphics.drawImage( plat2.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+
+//draws the partical emmitters paricles for the player.
+p1.drawEmitter("Gun", graphics);
+
+
+//must set colliding to true if player is colliding with any other sprite
+if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
+
+	p1.setCollision(true);
+}
+
+
+////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+//initialises graphics with drawable objects from this class
+graphics = bs.getDrawGraphics();
+
+//clears graphics object once has been drawn to buffer to save memory leak
+graphics.dispose();
+
+//shows image from buffer
+bs.show();
+
+}catch(Exception e){
+
+System.out.println("Error in draw function of level 2: " + e.toString());
+}
+
+//Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
+//as though frames being drawn evenly in time but not without.
+Toolkit.getDefaultToolkit().sync();
+}
+
+// level 3
+private void drawGame3(){
+
+//manages multiple drawing to buffer
+bs = getBufferStrategy();
+
+//try catch block
+try {
+
+//if buffer is not initialised ccreates new buffer to draw over
+if( bs == null){
+
+//two layers to buffer
+createBufferStrategy(2);
+
+//returns buffer to canvas for draw
+return;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\
+////////////			Level 3 functions for drawring baddies collisions etc here    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////\\\\\\\\\\\\\\\\\//////////////////////\\\\\\\\\\\\\\\\\//////////////////\\\\\\\\\\\\\\///////////////////////////
+
+//background image
+//graphics.drawImage( background3, 0, 0, WIDTH, HEIGHT, null);
 
 playerLogic();
 
@@ -302,6 +382,7 @@ System.out.println("Error in draw function of level 2: " + e.toString());
 //as though frames being drawn evenly in time but not without.
 Toolkit.getDefaultToolkit().sync();
 }
+
 
 	//\\\///\\\////\\\\/////\\\\////\\\\/////\\\\\\///////\\\\\\\\/////////\\\\\\\\////\\\///\\\\////\\\\
   //////////////////////////like the main game loop but for the menu instead\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -426,18 +507,27 @@ Toolkit.getDefaultToolkit().sync();
 
       while(true){
 
-      	if(menu){
+      	if( menu){
 
       		//calls draw function of menu
 	      	drawMenu();
 
 	      	//resets operation to none, so that hitting escape can bring up menu again
 	      	operation = "NONE";
-	    }else{
+	    }else if( level1){
 
 
 	    	//calls draw function of game
-	      	drawGame();
+	      drawGame();
+	    }else if( level2){
+
+	    	//calls draw function of game
+	      drawGame2();
+	    }else if( level3){
+
+
+	    	//calls draw function of game
+	      drawGame3();
 	    }
 
       	try{
@@ -478,6 +568,7 @@ Toolkit.getDefaultToolkit().sync();
 			if(options.getButton() == 1){
 
 				menu = false;
+				level1= true;
 			}else if(options.getButton() == 6){
 
 				System.out.println("Program deliberatley exited by user, chill is fine.");
