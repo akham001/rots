@@ -20,26 +20,28 @@ public class Player extends Sprite{
 		//first thing to happen base class must be initialised
 		super( "man", "data/sheet2.png", 4, 17);
 
-
 		//sprites are created in try catch blocks
 		try{
 
-			setXY( 300, 100);
-				//initialise for gravity conditions
-				setGravityMode( true);
-				setGravityAngle( 90);
-				setGravity(4);
-            setCollision(true);
+		    setXY( 300, 100);
 
-				//when thrust is applied the direction will be directly up
+		    //initialise for gravity conditions
+		    setGravityMode( true);
+		 	  setGravityAngle( 90);
+			  setGravity( 3);
+        setCollision( true);
+
+			  //when thrust is applied the direction will be directly up
 				setThrustAngle( 270);
 
 				//initialise for what animations to play while in which directions
-				//addAngleCondition( -10, 10, 25, 31);
-				//addAngleCondition( 170, 190, 18, 24);
-            
-            addAngleCondition( -10, 10, 35, 51);
-            addAngleCondition( 170, 190, 52,69);
+				addAngleCondition( -10, 10, 25, 31);
+				addAngleCondition( 170, 190, 18, 24);
+
+				//initialise for jumping animations
+				addJumpCondition( 1, 230, 100, 280, 51, 68);
+				addJumpCondition( 1, 290, 100, 310, 34, 51);
+
 				//hes a bit slow
 				setVelocity( 4);
 				setmaxVelocity( 20);
@@ -64,14 +66,17 @@ public class Player extends Sprite{
             //System.out.println("out of right");
         }
         if(leftBound()) {
+
             setXY( -20, getPosY());
         //    System.out.println("our of left");
         }
         if(bottomBound()) {
+
             setXY( getPosX(), 0);
            System.out.println("out of bottom");
         }
         if(topBound()) {
+
             setThrustAcceleration( 0);
             //System.out.println("out of top");
         }
@@ -79,10 +84,10 @@ public class Player extends Sprite{
 
     public void positionAdjust( Sprite _sprite) {
 
-        if(checkCollision( _sprite)){
-            int temp = getPosY()-100;
-            setXY( getPosX(), 430);
-           // System.out.println("true");
+        if( checkCollision( _sprite)){
+
+					//the bottom platfor is always going to be at 430 in pixels
+          setXY( getPosX(), 430);
         }
     }
 

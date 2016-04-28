@@ -361,15 +361,21 @@ public class Sprite{
 		conditions.add(new stateData( isIncreasing, _velocity, _frameStart, _frameEnd));
 	}
 
+	//adds velocity conditions to the conditions array
+	public void addJumpCondition( double _thrustAccelMin, double _thrustAngleMin, double _thrustAccelMax, double _thrustAngleMax, int _frameStart, int _frameEnd){
+
+		conditions.add(new stateData(  _thrustAccelMin, _thrustAngleMin, _thrustAccelMax, _thrustAngleMax, _frameStart, _frameEnd));
+	}
+
 	//loops the conditions array to check if sprite matches any one of the saved conditions, if it does frame start and
 	//frame end are updated
-	public void pollConditions(String _condition){
+	public void pollConditions( String _condition){
 
 		//for each connection
 		for(int x = 0; x < conditions.size(); x++){
 
 			//call each condition based on input
-			conditions.get(x).checkCondition(_condition);
+			conditions.get( x).checkCondition( _condition);
 		}
 	}
 
@@ -1319,7 +1325,7 @@ public class Sprite{
 		String dName;
 		int dStart, dEnd, dHeight, dWidth, speedStart, speedEnd;
 		float dmaxVelocity, dvelocity, dacceleration;
-		double dangle, angleStart, angleEnd;
+		double dangle, angleStart, angleEnd, thrustAccelMin, thrustAngleMax, thrustAccelMax, thrustAngleMin;
 
 		//initialise variables in constructor for automatic states, first arg is state name, second and third are animation frames to loop between, next is the height,
 		//width, max velocity, velocity, acceleration speed and angle
@@ -1361,12 +1367,24 @@ public class Sprite{
 			speedEnd = _speedEnd;
 		}
 
+		//initialise variables in constructor for initialising an animation state based on jumping logic
+		//the activation of this state will apply the thrust and an angle between two points for jumping
+		public stateData( double _thrustAccelMin, double _thrustAngleMin,  double _thrustAccelMax, double _thrustAngleMax, int _dstart, int _dend){
+
+			//assign data from constructor
+			dStart = _dstart;
+			dEnd = _dend;
+			thrustAccelMin = _thrustAccelMin;
+			thrustAngleMin = _thrustAngleMin;
+			thrustAccelMax = _thrustAccelMax;
+			thrustAngleMax = _thrustAngleMax;
+		}
+
 		//initialise variables in constructor for initialising an animation state based on the velocity:
 		//if first arg is true then the state will have changed if the sprites velocity is
 		//greater than that in the second argument, if it is false the change will occue when it is less than
 		//if more than one of these are set then there are conflicts, this can be resolved by calling pollState strategicaly
 		public stateData(boolean _ifIncreasing, int _dvelocity, int _dstart, int _dend){
-
 
 			//assign data from constructor
 			dStart = _dstart;
@@ -1443,6 +1461,38 @@ public class Sprite{
 						}
 					}
 						break;
+
+						case "JUMPING":
+
+							  _condition = getThrustAcceleration();
+							 double _condition2 = getThrustAngle();
+
+							if( _condition < thrustAccelMax && _condition > thrustAccelMin && _condition2 < thrustAngleMax && _condition2 > thrustAngleMin){
+
+								if( !(dStart <= frameNum && frameNum <= dEnd)){
+
+									frameNum = dStart;
+									frameStart = dStart;
+									frameEnd = dEnd;
+								}
+							}
+								break;
+
+								//to compliment jumping
+							/*	case "FALLING":
+
+									 _condition = getThrustAcceleration();
+
+									if( _condition < thrustAccelerationMax && _condition > thrustAccelerationMin && ){
+
+										if( !(dStart <= frameNum && frameNum <= dEnd)){
+
+											frameNum = dStart;
+											frameStart = dStart;
+											frameEnd = dEnd;
+										}
+									}
+										break; */
 
 				default:
 

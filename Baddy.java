@@ -63,13 +63,12 @@ public class Baddy extends Sprite{
 		public void hit(){
 
 			activateEmitterFountain( "bloodFountain");
-			setThrustAcceleration( 50);
-			health -= 40;
+			setThrustAcceleration( 120);
+			health -= 110;
 
 			if( health < 0){
 
-				isDead = false;
-				System.out.println( "baddy is dead :O");
+				isDead = true;
 			}
 		}
 
