@@ -18,26 +18,28 @@ public class Player extends Sprite{
 	public Player() throws Exception{
 
 		//first thing to happen base class must be initialised
-		super( "man", "data/run_.png", 1, 10);
+		super( "man", "data/sheet2.png", 4, 17);
 
 
 		//sprites are created in try catch blocks
 		try{
 
 			setXY( 300, 100);
-      setWH( 100, 100);
 				//initialise for gravity conditions
 				setGravityMode( true);
 				setGravityAngle( 90);
-				setGravity( 5);
+				setGravity(4);
+            setCollision(true);
 
 				//when thrust is applied the direction will be directly up
 				setThrustAngle( 270);
 
 				//initialise for what animations to play while in which directions
-				addAngleCondition( -10, 10, 1, 10);
-				addAngleCondition( 170, 190, 1, 10);
-
+				//addAngleCondition( -10, 10, 25, 31);
+				//addAngleCondition( 170, 190, 18, 24);
+            
+            addAngleCondition( -10, 10, 35, 51);
+            addAngleCondition( 170, 190, 52,69);
 				//hes a bit slow
 				setVelocity( 4);
 				setmaxVelocity( 20);
@@ -67,7 +69,7 @@ public class Player extends Sprite{
         }
         if(bottomBound()) {
             setXY( getPosX(), 0);
-          //  System.out.println("out of bottom");
+           System.out.println("out of bottom");
         }
         if(topBound()) {
             setThrustAcceleration( 0);
@@ -78,8 +80,8 @@ public class Player extends Sprite{
     public void positionAdjust( Sprite _sprite) {
 
         if(checkCollision( _sprite)){
-            int temp = getPosY();
-            setXY( getPosX(), 420);
+            int temp = getPosY()-100;
+            setXY( getPosX(), 430);
            // System.out.println("true");
         }
     }

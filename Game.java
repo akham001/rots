@@ -98,7 +98,7 @@ public class Game extends Canvas implements Runnable{
 		try{
 
 			//presently used to make contact sheets
-			//loadImages( "data/running_sprites/", "run_", ".png" );
+			loadImages( "data/normal-jump/", "jump", ".png" );
 
 			//new instances of sprite must be constructed in try catch blocks as the y throw exceptions
 			options = new Menu( WIDTH, HEIGHT);
@@ -112,7 +112,7 @@ public class Game extends Canvas implements Runnable{
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
-
+            
 			//starting position for player
 			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/2 + p1.getHeight()));
 
@@ -202,7 +202,7 @@ public class Game extends Canvas implements Runnable{
 					//draw cross hair at location of pointer
 					crosshair.setXY( mouseX, mouseY);
 					graphics.drawImage( crosshair.getFrame(0), crosshair.getPosX(), crosshair.getPosY(), crosshair.getWidth(), crosshair.getHeight(), null);
-
+            
         	//sets menu to true, not calling this version of events stores them all exactly as they are, this could allow easy saving and loading mechanism
         	//in menu
         	if( operation == "ESCAPE"){
@@ -219,7 +219,7 @@ public class Game extends Canvas implements Runnable{
         	}
 
 					//handfull of output messages usefull for debugging
-					//graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
+					graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
           //System.out.println(p1.getThrustAcceleration());
 					System.out.println ("pos x is: " + p1.getPosX() + " and y: " + p1.getPosY());
 					//System.out.println(direction);
@@ -238,28 +238,13 @@ public class Game extends Canvas implements Runnable{
         //must set colliding to true if player is colliding with any other sprite
   			if(p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) ){
 
-  				p1.setCollision( true);
+  				p1.setCollision(true);
+                System.out.println("its ture");
   			}
-
-  			if(p1.checkCollisionLeft( plat2)){
-
-  				System.out.println(" DANGLEH LEFT");
-  			}
-
-  			if(p1.checkCollisionRight( plat2)){
-
-  				System.out.println(" DANGLEH RIGHT");
-  			}
-
-  			if(p1.checkCollisionAbove( plat2)){
-
-  				System.out.println(" DANGLEH UP");
-  			}
-
-  			if(p1.checkCollisionBelow( plat2)){
-
-  				System.out.println(" DANGLEH DAHN");
-  			}
+            
+         //   if(p1.checkCollision(portal1)) {
+           //     System.out.println("level 2");
+            //}
 
         crab.outOfBoundsCheck();
 
