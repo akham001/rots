@@ -74,6 +74,9 @@ public class Game extends Canvas implements Runnable{
 	//stores a single baddy, this is for demo
 	public Baddy crab;
 
+	//like a baddy except can shoot, will make an extension of bady later
+	public Enemy number1, enemy;
+
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor, next is the image for the background of the menu
 	public Image background, background2, menuBackground;
@@ -122,9 +125,11 @@ public class Game extends Canvas implements Runnable{
 			p1 = new Player();
 			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
+			enemy = new Enemy();
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
+			enemy.setXY( WIDTH - WIDTH/5, HEIGHT/2);
 
 			//starting position for player
 			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/4 + p1.getHeight()));
@@ -159,7 +164,7 @@ public class Game extends Canvas implements Runnable{
 			if( bs == null){
 
 				//use one or two layers to buffer sprites if needed
-	    	createBufferStrategy(1);
+	    	createBufferStrategy(0);
 
 	    		//returns buffer to canvas for draw in jpanel
 	    		return;
@@ -242,6 +247,8 @@ public class Game extends Canvas implements Runnable{
 
 				//moving plat2 over
 				plat2.setXY( WIDTH - WIDTH/3, HEIGHT/2);
+				//clears graphics object once has been drawn to buffer to save memory leak
+				graphics.dispose();
 			 }
 	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -303,6 +310,25 @@ if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(
 	p1.setCollision(true);
 }
 
+graphics.drawImage( enemy.getFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
+
+        enemy.outOfBoundsCheck();
+
+  			//must set colliding to true if baddy is colliding with any other sprite
+  			if(enemy.checkCollision( plat1) || enemy.checkCollision( plat2)){
+
+  				 enemy.setCollision( true);
+  			}
+
+  			enemy.moveSprite();
+
+			  //check if any of the players gun particles has collided with the crab object
+		   if ( p1.detectParticleCollision( "Gun", enemy)){
+
+		 		 enemy.hit();
+			 }
+
+			 enemy.drawEmitter( "bloodFountain", graphics);
 
 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -400,7 +426,7 @@ Toolkit.getDefaultToolkit().sync();
 			if(bs == null){
 
 				//two layers to buffer
-	    		createBufferStrategy(2);
+	    		createBufferStrategy(3);
 
 	    		//returns buffer to canvas for draw
 	    		return;
