@@ -272,9 +272,6 @@ public class Game extends Canvas implements Runnable{
 				//background image
 	  			graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
 
-        		graphics.drawImage( enemy.nextFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
-				graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
         	
 
 				//draws the partical emmitters paricles for the player.
@@ -311,8 +308,15 @@ public class Game extends Canvas implements Runnable{
 
 			 	if( !enemy.isDead){
 
+
+			 		graphics.drawImage( enemy.nextFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
 			 		enemy.drawEmitter( "Gun", graphics);
 			 	}
+
+			 	
+        		
+				graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
 
 			 	//enemy shoots at player
 			 	enemy.shootPlayer( p1);
