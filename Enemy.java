@@ -36,8 +36,10 @@ public class Enemy extends Sprite{
 
 				//add a blood fountain for when its hit
 				addEmitter( "bloodFountain", "data/blood.png", 20, 20, 80, 270, 20, true);
+				//emitter
+        		addEmitter( "Gun", "data/ball.png", 10, 1, 2000, 210, 30, false);
 
-				setThrustAngle( 300);
+				setThrustAngle( 270);
 		 }catch(Exception e){
 
 				System.out.println("Error in Baddy constructor: " + e.toString());
@@ -58,6 +60,25 @@ public class Enemy extends Sprite{
             setThrustAcceleration(0);
         }
     }
+
+    public void positionAdjust( Sprite _sprite) {
+
+        if( checkCollision( _sprite)){
+
+					//the bottom platfor is always going to be at 430 in pixels
+          setXY( getPosX(), 230);
+        }
+    }
+
+
+    	//takes player as an argument so that the enemy can 
+    	public void shootPlayer( Sprite _sprite){
+
+    		double _angle = getAngleTo( _sprite);
+    		changeEmitterAngle( "Gun", _angle);
+        	activateEmitterFountain( "Gun");
+
+    	}
 
 		//if the baddy is hit take some damage and draw a blood spurt, if the baddy is killed set dead to true
 		public void hit(){

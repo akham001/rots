@@ -133,7 +133,7 @@ public class Game extends Canvas implements Runnable{
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
-			enemy.setXY( WIDTH - WIDTH/5, HEIGHT/15);
+			enemy.setXY( WIDTH - WIDTH/5, HEIGHT/4);
 			number1.setXY( WIDTH - WIDTH/5, HEIGHT/2);
 
 			//starting position for player
@@ -267,9 +267,9 @@ public class Game extends Canvas implements Runnable{
 				//background image
 	  			graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
 
-	  			graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
         		graphics.drawImage( enemy.nextFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
+				graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
         	
 
 				//draws the partical emmitters paricles for the player.
@@ -294,6 +294,7 @@ public class Game extends Canvas implements Runnable{
   				}
 
   				enemy.moveSprite();
+  				enemy.positionAdjust( plat2);
 
 			    //check if any of the players gun particles has collided with the enemy object
 		   		if ( p1.detectParticleCollision( "Gun", enemy)){
@@ -302,6 +303,18 @@ public class Game extends Canvas implements Runnable{
 			 	}
 
 			 	enemy.drawEmitter( "bloodFountain", graphics);
+			 	enemy.drawEmitter( "Gun", graphics);
+
+
+			 	//enemy shoots at player
+			 	enemy.shootPlayer( p1);
+
+			 	//detects collsions against player
+			 	//check if any of the players gun particles has collided with the enemy object
+		   		if ( enemy.detectParticleCollision( "Gun", p1)){
+
+		 		 p1.hit();
+			 	}
 
 
 
@@ -566,6 +579,15 @@ public class Game extends Canvas implements Runnable{
 
 			//reset operation to none
 			operation = "NONE";
+		}
+
+		if( p1.isDead()){
+
+			System.out.println( "Player is dead!!");
+			credits = true;
+			level1 = false;
+			level2 = false;
+			level3 = false;
 		}
 	}
 

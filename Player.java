@@ -12,7 +12,7 @@
 public class Player extends Sprite{
 
 	//int health, ammo, etc;
-
+    int health = 1;
 
 	//create player sprite here, throws an exception as base class also does
 	public Player() throws Exception{
@@ -88,6 +88,22 @@ public class Player extends Sprite{
 
 					//the bottom platfor is always going to be at 430 in pixels
           setXY( getPosX(), 430);
+        }
+    }
+
+    public void hit(){
+
+        health -= 1;
+    }
+
+    public boolean isDead(){
+
+        if( health <= 0){
+
+            return true;
+        }else{
+
+            return false;
         }
     }
 
