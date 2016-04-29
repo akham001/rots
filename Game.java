@@ -72,10 +72,10 @@ public class Game extends Canvas implements Runnable{
 	public Platform plat1, plat2, plat3, plat4;
 
 	//stores a single baddy, this is for demo
-	public Baddy crab;
+	public Baddy crab, number1;
 
 	//like a baddy except can shoot, will make an extension of bady later
-	public Enemy number1, enemy;
+	public Enemy enemy;
 
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor, next is the image for the background of the menu
@@ -128,7 +128,7 @@ public class Game extends Canvas implements Runnable{
 			p1 = new Player();
 			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
-			number1 = new Enemy();
+			number1 = new Baddy();
 			enemy = new Enemy();
 
 			//so crab doesnt fall too hard on the first platform at this stage
@@ -219,6 +219,11 @@ public class Game extends Canvas implements Runnable{
 
         crab.outOfBoundsCheck();
 
+        if( crab.checkCollision( p1)){
+
+        	p1.hit();
+        }
+
   			//must set colliding to true if baddy is colliding with any other sprite
   			if(crab.checkCollision( plat1) || crab.checkCollision( plat2)){
 
@@ -303,8 +308,11 @@ public class Game extends Canvas implements Runnable{
 			 	}
 
 			 	enemy.drawEmitter( "bloodFountain", graphics);
-			 	enemy.drawEmitter( "Gun", graphics);
 
+			 	if( !enemy.isDead){
+
+			 		enemy.drawEmitter( "Gun", graphics);
+			 	}
 
 			 	//enemy shoots at player
 			 	enemy.shootPlayer( p1);
@@ -349,7 +357,7 @@ public class Game extends Canvas implements Runnable{
 
 	  			graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
         		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
-        		graphics.drawImage( number1.nextFrame(), number1.getPosX(),number1.getPosY(), number1.getWidth(), number1.getHeight(), null);
+        		graphics.drawImage( number1.getFrame(0), number1.getPosX(),number1.getPosY(), number1.getWidth(), number1.getHeight(), null);
 
 				//draws the partical emmitters paricles for the player.
         		p1.drawEmitter("Gun", graphics);
@@ -393,6 +401,7 @@ public class Game extends Canvas implements Runnable{
 					System.out.println( "END OF GAME SO FAR!");	
 					menu = false;
 					level3 = false;
+					startFlag = true;
 					credits = true;
 			 }
 
