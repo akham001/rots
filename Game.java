@@ -378,7 +378,7 @@ public class Game extends Canvas implements Runnable{
 			 if( p1.getPosX() > ( WIDTH - WIDTH/10) && p1.getPosY() < HEIGHT/3){
 
 					System.out.println( "END OF GAME SO FAR!");	
-					menu = true;
+					menu = false;
 					level3 = false;
 					credits = true;
 			 }
