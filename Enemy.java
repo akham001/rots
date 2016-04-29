@@ -12,7 +12,7 @@ public class Enemy extends Sprite{
 	public Enemy() throws Exception{
 
 		//first thing to happen base class must be initialised
-		super("crab", "data/sheet2.png", 4, 17);
+		super("enemy", "data/sheet2.png", 4, 17);
 
 		//sprites are created in try catch blocks
 		try{
@@ -25,19 +25,19 @@ public class Enemy extends Sprite{
 				setGravityAngle( 90);
 				setGravity( 8);
 
-				addState("RIGHT", 18, 25, getHeight(), getWidth(), 5, 2, 3, 3);
-        addState("LEFT", 25, 31, getHeight(), getWidth(), 5, 2, 3, 180);
+				addState("RIGHT", 25, 31, getHeight(), getWidth(), 5, 2, 3, 3);
+                addState("LEFT", 18, 25, getHeight(), getWidth(), 5, 2, 3, 180);
 
 				//activate a state to start with
 				activateState("RIGHT");
 
-        //Set baddy bounds
-        setAllBounds(40, 220, 600, 0);
+        		//Set baddy bounds
+        		setAllBounds(500, 780, 50, 200);
 
 				//add a blood fountain for when its hit
 				addEmitter( "bloodFountain", "data/blood.png", 20, 20, 80, 270, 20, true);
 
-				setThrustAngle( 260);
+				setThrustAngle( 300);
 		 }catch(Exception e){
 
 				System.out.println("Error in Baddy constructor: " + e.toString());
@@ -63,7 +63,7 @@ public class Enemy extends Sprite{
 		public void hit(){
 
 			activateEmitterFountain( "bloodFountain");
-			setThrustAcceleration( 120);
+			setThrustAcceleration( 300);
 			health -= 110;
 
 			if( health < 0){

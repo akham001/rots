@@ -47,7 +47,7 @@ public class Game extends Canvas implements Runnable{
 	Menu options;
 
 	//flag to end menu options
-	boolean menu, level1, level2, level3;
+	boolean startFlag, menu, credits, level1, level2, level3;
 
 	//this stores the last up down left or right arrow to be pressed as lUP, lDown, lRight, lLeft, or if the arrows are activley being pressed it stores UP DOWN LEFT or RIGHT
 	//starts with none as default
@@ -79,10 +79,13 @@ public class Game extends Canvas implements Runnable{
 
 	//this will store the background, an image loading class will be used in the future, for now, the image
 	//is initialised in the constructor, next is the image for the background of the menu
-	public Image background, background2, menuBackground;
+	public Image background, background2, menuBackground, creditsImage;
 
 	//constructor for game class
 	public Game( int _W, int _H){
+
+		//the game has been started
+		startFlag = true;
 
 		//adding key and mouse listener class to this window
 		this.addMouseListener( new mouselisten());
@@ -125,11 +128,13 @@ public class Game extends Canvas implements Runnable{
 			p1 = new Player();
 			crosshair = new Sprite( "crosshair", "data/crosshair.png", 1, 1);
 			crab = new Baddy();
+			number1 = new Enemy();
 			enemy = new Enemy();
 
 			//so crab doesnt fall too hard on the first platform at this stage
 			crab.setXY( WIDTH/20, HEIGHT/20);
-			enemy.setXY( WIDTH - WIDTH/5, HEIGHT/2);
+			enemy.setXY( WIDTH - WIDTH/5, HEIGHT/15);
+			number1.setXY( WIDTH - WIDTH/5, HEIGHT/2);
 
 			//starting position for player
 			p1.setXY( WIDTH - p1.getWidth(), HEIGHT - ( HEIGHT/4 + p1.getHeight()));
@@ -141,6 +146,7 @@ public class Game extends Canvas implements Runnable{
 			background = ImageIO.read( new File( "data/background.png"));
 			background2 = ImageIO.read( new File( "data/level2.png"));
 			menuBackground = ImageIO.read( new File( "data/homescreen.png"));
+			creditsImage = ImageIO.read( new File( "data/creditsImage.png"));
 
 		}catch( Exception e){
 
@@ -148,8 +154,8 @@ public class Game extends Canvas implements Runnable{
 		}
 	}
 
-  ///////////\\\\\\\\\\\\\\\\\\/////////////\\\\\\\\\\\\\\////////////\\\\\\\\\\\\///////////\\\\\\\\\\\//////////\\\\\////\\\\\\\\\\\/\\\\\\\
-  //////////////////////////////////////Next block contains the main game loop essentially,\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    ///////////\\\\\\\\\\\\\\\\\\/////////////\\\\\\\\\\\\\\////////////\\\\\\\\\\\\///////////\\\\\\\\\\\//////////\\\\\////\\\\\\\\\\\/\\\\\\\
+    //////////////////////////////////////Next block contains the main game loop essentially,\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	///////////////////////////////the function draws each sprite to a buffer and then blits it\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\/////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////\\\\\\\\\\////////\\\\\\\
 	private void drawGame(){
@@ -173,41 +179,43 @@ public class Game extends Canvas implements Runnable{
 	   	//initialises graphics with drawable objects from this class
 	 		graphics = bs.getDrawGraphics();
 
-      //////////////////////////////////////////////////////////////////////////
-      //																																			//
-      //									GAME FUNCTIONS AND UPDATES HERE											//
-      //																																			//
-    	//////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
+	  //																	   //
+      //			        LEVEL1 FUNCTIONS AND UPDATES HERE	   			   //
+      //																	   //
+      ///////////////////////////////////////////////////////////////////////////
+
+	 if(level1){
 
 
       //background image
-	 		graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
+	  graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
 
-					playerLogic();
+	  playerLogic();
 
-					//handfull of output messages usefull for debugging
-					//graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
-          //System.out.println( p1.getThrustAcceleration());
-					//System.out.println ("pos x is: " + p1.getPosX() + " and y: " + p1.getPosY());
-					//System.out.println( direction);
+		//handfull of output messages usefull for debugging
+		//graphics.drawImage( portal1.getFrame(0), portal1.getPosX(), portal1.getPosY(), portal1.getWidth(), portal1.getHeight(), null);
+        //System.out.println( p1.getThrustAcceleration());
+		//System.out.println ("pos x is: " + p1.getPosX() + " and y: " + p1.getPosY());
+		//System.out.println( direction);
 
-        	graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
+        graphics.drawImage( crab.getFrame(0), crab.getPosX(), crab.getPosY(), crab.getWidth(), crab.getHeight(), null);
 
-          //  crab.outOfBoundsCheck();
-        	graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-        	graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
-          graphics.drawImage( plat3.getFrame(0), plat3.getPosX(), plat3.getPosY(), plat3.getWidth(), plat3.getHeight(), null);
-					graphics.drawImage( plat4.getFrame(0), plat4.getPosX(), plat4.getPosY(), plat4.getWidth(), plat4.getHeight(), null);
+        //  crab.outOfBoundsCheck();
+        graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+        graphics.drawImage( plat3.getFrame(0), plat3.getPosX(), plat3.getPosY(), plat3.getWidth(), plat3.getHeight(), null);
+		graphics.drawImage( plat4.getFrame(0), plat4.getPosX(), plat4.getPosY(), plat4.getWidth(), plat4.getHeight(), null);
 
-					//draws the partical emmitters paricles for the player.
-          p1.drawEmitter("Gun", graphics);
+		//draws the partical emmitters paricles for the player.
+        p1.drawEmitter("Gun", graphics);
 
 
         //must set colliding to true if player is colliding with any other sprite
-  			if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
+  		if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
 
-  				p1.setCollision(true);
-  			}
+  			p1.setCollision(true);
+  		}
 
         crab.outOfBoundsCheck();
 
@@ -238,7 +246,7 @@ public class Game extends Canvas implements Runnable{
 				//if the crab was not killed move that too
 				crab.setXY( - 200, HEIGHT);
 
-				 //sets the players x and y position for the next level
+				//sets the players x and y position for the next level
 				p1.setXY( 30, 30);
 
 				//get rid of platform three and four by moving them off the screen, keeping platform two just making it longer and moving it over
@@ -247,13 +255,140 @@ public class Game extends Canvas implements Runnable{
 
 				//moving plat2 over
 				plat2.setXY( WIDTH - WIDTH/3, HEIGHT/2);
-				//clears graphics object once has been drawn to buffer to save memory leak
-				graphics.dispose();
+				
 			 }
-	 		 ////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
+	 		 ////////////////////---------------------> end of level 1 <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-	 	  //clears graphics object once has been drawn to buffer to save memory leak
+
+	 		/// level2 game logic
+			}else if( level2 ){			
+
+				//background image
+	  			graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
+
+	  			graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+        		graphics.drawImage( enemy.nextFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
+        	
+
+				//draws the partical emmitters paricles for the player.
+        		p1.drawEmitter("Gun", graphics);
+        		playerLogic();
+
+
+        		//must set colliding to true if player is colliding with any other sprite
+  				if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
+
+  					p1.setCollision(true);
+  				}
+
+
+
+	  			enemy.outOfBoundsCheck();
+
+  				//must set colliding to true if baddy is colliding with any other sprite
+  				if( enemy.checkCollision( plat1) || enemy.checkCollision( plat2) || enemy.checkCollision( plat3) || enemy.checkCollision( plat4)){
+
+  				 enemy.setCollision( true);
+  				}
+
+  				enemy.moveSprite();
+
+			    //check if any of the players gun particles has collided with the enemy object
+		   		if ( p1.detectParticleCollision( "Gun", enemy)){
+
+		 		 enemy.hit();
+			 	}
+
+			 	enemy.drawEmitter( "bloodFountain", graphics);
+
+
+
+	  			//if player in following bounds start level 3
+			 	if( p1.getPosX() > ( WIDTH - WIDTH/10) && p1.getPosY() < HEIGHT/2){
+
+					//level logic is simple, if not in level one then in the next level
+					//and so on
+					level2 = false;
+					level3 = true;
+
+					//if the enemy number1 was not killed move that too
+					number1.setXY( - 200, HEIGHT);
+
+					
+					//get rid of platform three and four by moving them off the screen, keeping platform two just making it longer and moving it over
+					plat3.setXY( WIDTH/2, HEIGHT/2);
+					plat4.setXY( WIDTH/4, HEIGHT/4);
+
+					//moving plat2 over
+					plat2.setXY( WIDTH - WIDTH/3, HEIGHT/2);
+
+					p1.setXY( 80, 431);
+				
+			 }
+
+
+			}else if( level3){
+
+				//background image
+	  			graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
+
+	  			graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
+        		graphics.drawImage( plat2.getFrame(0), plat2.getPosX(), plat2.getPosY(), plat2.getWidth(), plat2.getHeight(), null);
+        		graphics.drawImage( number1.nextFrame(), number1.getPosX(),number1.getPosY(), number1.getWidth(), number1.getHeight(), null);
+
+				//draws the partical emmitters paricles for the player.
+        		p1.drawEmitter("Gun", graphics);
+
+
+
+
+        		//must set colliding to true if player is colliding with any other sprite
+  				if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
+
+  					p1.setCollision(true);
+  				}
+
+
+	  			playerLogic();
+
+	  			number1.outOfBoundsCheck();
+
+  				//must set colliding to true if baddy is colliding with any other sprite
+  				if( number1.checkCollision( plat1) || number1.checkCollision( plat2) || number1.checkCollision( plat3) || number1.checkCollision( plat4)){
+
+  				 number1.setCollision( true);
+  				}
+
+  				number1.moveSprite();
+
+			    //check if any of the players gun particles has collided with the enemy object
+		   		if ( p1.detectParticleCollision( "Gun", number1)){
+
+		 		 number1.hit();
+			 	}
+
+			 	number1.drawEmitter( "bloodFountain", graphics);
+
+
+
+
+	  		 //if player in following bounds start level 3
+			 if( p1.getPosX() > ( WIDTH - WIDTH/10) && p1.getPosY() < HEIGHT/3){
+
+					System.out.println( "END OF GAME SO FAR!");	
+					menu = true;
+					level3 = false;
+					credits = true;
+			 }
+
+			}else if( credits){
+
+				graphics.drawImage( creditsImage, 0, 0, WIDTH, HEIGHT, null);
+			}
+
+	 	    //clears graphics object once has been drawn to buffer to save memory leak
 	 		graphics.dispose();
 
 	 		//shows image from buffer
@@ -269,145 +404,6 @@ public class Game extends Canvas implements Runnable{
         Toolkit.getDefaultToolkit().sync();
 	}
 
-// level 2
-private void drawGame2(){
-
-//manages multiple drawing to buffer
-bs = getBufferStrategy();
-
-//try catch block
-try {
-
-//if buffer is not initialised ccreates new buffer to draw over
-if( bs == null){
-
-//two layers to buffer
-createBufferStrategy(1);
-
-//returns buffer to canvas for draw
-return;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\
-////////////			Level 2 functions for drawring baddies collisions etc here    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//////\\\\\\\\\\\\\\\\\//////////////////////\\\\\\\\\\\\\\\\\//////////////////\\\\\\\\\\\\\\///////////////////////////
-
-//background image
-graphics.drawImage( background2, 0, 0, WIDTH, HEIGHT, null);
-
-playerLogic();
-
-graphics.drawImage( plat1.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-graphics.drawImage( plat2.getFrame(0), plat1.getPosX(), plat1.getPosY(), plat1.getWidth(), plat1.getHeight(), null);
-
-//draws the partical emmitters paricles for the player.
-p1.drawEmitter("Gun", graphics);
-
-
-//must set colliding to true if player is colliding with any other sprite
-if( p1.checkCollision( plat1) || p1.checkCollision( plat2) || p1.checkCollision(plat3) || p1.checkCollision(plat4)){
-
-	p1.setCollision(true);
-}
-
-graphics.drawImage( enemy.getFrame(), enemy.getPosX(), enemy.getPosY(), enemy.getWidth(), enemy.getHeight(), null);
-
-        enemy.outOfBoundsCheck();
-
-  			//must set colliding to true if baddy is colliding with any other sprite
-  			if(enemy.checkCollision( plat1) || enemy.checkCollision( plat2)){
-
-  				 enemy.setCollision( true);
-  			}
-
-  			enemy.moveSprite();
-
-			  //check if any of the players gun particles has collided with the crab object
-		   if ( p1.detectParticleCollision( "Gun", enemy)){
-
-		 		 enemy.hit();
-			 }
-
-			 enemy.drawEmitter( "bloodFountain", graphics);
-
-////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-//initialises graphics with drawable objects from this class
-graphics = bs.getDrawGraphics();
-
-//clears graphics object once has been drawn to buffer to save memory leak
-graphics.dispose();
-
-//shows image from buffer
-bs.show();
-
-}catch(Exception e){
-
-System.out.println("Error in draw function of level 2: " + e.toString());
-}
-
-//Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
-//as though frames being drawn evenly in time but not without.
-Toolkit.getDefaultToolkit().sync();
-}
-
-// level 3
-private void drawGame3(){
-
-//manages multiple drawing to buffer
-bs = getBufferStrategy();
-
-//try catch block
-try {
-
-//if buffer is not initialised ccreates new buffer to draw over
-if( bs == null){
-
-//two layers to buffer
-createBufferStrategy(2);
-
-//returns buffer to canvas for draw
-return;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\
-////////////			Level 3 functions for drawring baddies collisions etc here    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//////\\\\\\\\\\\\\\\\\//////////////////////\\\\\\\\\\\\\\\\\//////////////////\\\\\\\\\\\\\\///////////////////////////
-
-//background image
-//graphics.drawImage( background3, 0, 0, WIDTH, HEIGHT, null);
-
-playerLogic();
-
-////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-//initialises graphics with drawable objects from this class
-graphics = bs.getDrawGraphics();
-
-
-//background image  ///TO DO another background for next stage
-graphics.drawImage( background, 0, 0, WIDTH, HEIGHT, null);
-
-
-//System.out.println(direction);
-////////////////////---------------------> end of drawring space <-----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-//clears graphics object once has been drawn to buffer to save memory leak
-graphics.dispose();
-
-//shows image from buffer
-bs.show();
-
-}catch(Exception e){
-
-System.out.println("Error in draw function of level 2: " + e.toString());
-}
-
-//Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
-//as though frames being drawn evenly in time but not without.
-Toolkit.getDefaultToolkit().sync();
-}
 
 
 	//\\\///\\\////\\\\/////\\\\////\\\\/////\\\\\\///////\\\\\\\\/////////\\\\\\\\////\\\///\\\\////\\\\
@@ -435,7 +431,7 @@ Toolkit.getDefaultToolkit().sync();
 	   	//initialises graphics with drawable objects from this class
 	 		graphics = bs.getDrawGraphics();
 
-    	///////////////////////////////////////////////////////////////////\\\\\\\
+      ///////////////////////////////////////////////////////////////////\\\\\\\
       //																	                                  	\\
       //									MENU FUNCTIONS AND UPDATES HERE		               		\\
       //																		                                  \\
@@ -467,6 +463,51 @@ Toolkit.getDefaultToolkit().sync();
 	}////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////end of the menu and game functions \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	//\\//\\///\\///\\//\\///\\///\\///\\\////\\\\/////\\\\\/////\\\///\\\///\\///\\//\\///\\
+
+	private void drawCredits(){
+
+		//manages multiple drawing to buffer
+	    bs = getBufferStrategy();
+
+ 		//try catch block
+		try {
+
+			//if buffer is not initialised ccreates new buffer to draw over
+			if(bs == null){
+
+				//two layers to buffer
+	    		createBufferStrategy(3);
+
+	    		//returns buffer to canvas for draw
+	    		return;
+	   		}
+
+	   	//initialises graphics with drawable objects from this class
+	 		graphics = bs.getDrawGraphics();
+
+   
+      graphics.drawImage( creditsImage, 0, 0, WIDTH, HEIGHT, null);
+
+     
+
+			//shows image from buffer
+	 		bs.show();
+
+	 		//clears graphics object once has been drawn to buffer to save memory leak
+	 		graphics.dispose();
+
+
+
+		}catch(Exception e){
+
+			System.out.println("Error in draw function of Menu: " + e.toString());
+		}
+
+        //Synchronises drawring on the screen with for smoother graphics bliting, try commenting out to see difference, seems
+        //as though frames being drawn evenly in time but not without.
+        Toolkit.getDefaultToolkit().sync();
+	}
+
 
 	public void playerLogic(){
 
@@ -540,22 +581,15 @@ Toolkit.getDefaultToolkit().sync();
 
 	      	//resets operation to none, so that hitting escape can bring up menu again
 	      	operation = "NONE";
-	    }else if( level1){
+	    }else if( credits){
 
+	    	drawCredits();
+	    	operation = "NONE";
+	    }else{
 
-	    	//calls draw function of game
-	      drawGame();
-	    }else if( level2){
-
-	    	//calls draw function of game
-	      drawGame2();
-	    }else if( level3){
-
-
-	    	//calls draw function of game
-	      drawGame3();
+	    	drawGame();
+	    	operation = "NONE";
 	    }
-
       	try{
 
             //temporary delay, must be calculated in relation to CPU speed of users computer
@@ -591,10 +625,16 @@ Toolkit.getDefaultToolkit().sync();
 
 		public void mouseClicked(MouseEvent e) {
 
-			if(options.getButton() == 1){
+			if(options.getButton() == 1 && startFlag){
 
 				menu = false;
-				level1= true;
+				credits = false;
+				level1 = true;
+				startFlag = false;
+			}else if( options.getButton() == 5 && startFlag){
+
+				credits = true;
+				startFlag = false;
 			}else if(options.getButton() == 6){
 
 				System.out.println("Program deliberatley exited by user, chill is fine.");
@@ -686,6 +726,10 @@ Toolkit.getDefaultToolkit().sync();
 	            	break;
 
 	            	case KeyEvent.VK_ESCAPE :
+
+	            		startFlag = true;
+	            		menu = true;
+	            		credits = false;
 
 	            		operation = "ESCAPE";
 	            	break;

@@ -47,7 +47,7 @@ public class Player extends Sprite{
 				setmaxVelocity( 20);
 
         //emitter
-        addEmitter( "Gun", "data/ball.png", 10, 1, 60, 210, 70, false);
+        addEmitter( "Gun", "data/ball.png", 10, 1, 600, 210, 30, false);
 
         //Set player Bounds to keep him within the screen
         setAllBounds( -20,  734, 900, 0);

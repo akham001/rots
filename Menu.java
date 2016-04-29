@@ -77,6 +77,9 @@ public class Menu{
                     if( buttons.get(x).getName().equals("pointer") && buttons.get(y).getName().equals("play")){
 
                         return 1;
+                    }else  if( buttons.get(x).getName().equals("pointer") && buttons.get(y).getName().equals("credits")){
+
+                        return 5;
                     }else  if( buttons.get(x).getName().equals("pointer") && buttons.get(y).getName().equals("exit")){
 
                         return 6;

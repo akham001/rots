@@ -297,7 +297,7 @@ public class Sprite{
 		}
 
 		//if not found then set to default state
-		if(!found){
+		if( !found){
 
 			frameStart = 0;
 			maxVelocity = 0;
@@ -313,7 +313,7 @@ public class Sprite{
 	//as above function however if the state is allready active then the function is not called at all
 	public void continue_activateState(String _setStateTo){
 
-		if(!(getState().equals(_setStateTo))){
+		if( !(getState().equals(_setStateTo))){
 
 			activateState(_setStateTo);
 		}
@@ -322,7 +322,7 @@ public class Sprite{
 	//this function also activates state almost the same as above however it does not change
 	//velocity, maxVelocity, angle or speed, this is to allow for just changing the frames
 	//if the conditions change, ideal for moving sprites with keys as keys are held down
-	public void semi_activateState(String _setStateTo){
+	public void semi_activateState( String _setStateTo){
 
 		//if found is never set to true, state was never found and default state is used
 		boolean found = false;
@@ -410,7 +410,7 @@ public class Sprite{
 			return frames.get(_frame);
 		}
 
-		System.out.println("Frame not found");
+		System.out.println( "Frame not found");
 		return frames.get(0);
 	}
 
